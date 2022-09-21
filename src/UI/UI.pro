@@ -11,11 +11,13 @@ CONFIG += c++17
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
-    mymodel.cpp
+    mymodel.cpp \
+    processesmodel.cpp
 
 HEADERS += \
     mainwindow.h \
-    mymodel.h
+    mymodel.h \
+    processesmodel.h
 
 FORMS += \
     mainwindow.ui

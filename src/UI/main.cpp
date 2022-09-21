@@ -8,11 +8,17 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    //MainWindow w;
+    MyModel processesModel;
+    QTableView processesTableView;
+    processesTableView.setModel(&processesModel);
+
+    MyModel logModel;
+    QListView logListView;
+    logListView.setModel(&logModel);
+
+    MainWindow window(nullptr,&processesTableView,&logListView);
     QTreeView tableView;
-    MyModel model;
-    tableView.setModel(&model);
-    tableView.show();
-    //w.show();
+
+    window.show();
     return a.exec();
 }

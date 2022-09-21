@@ -1,12 +1,19 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include <QVBoxLayout>
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
+MainWindow::MainWindow(QWidget *parent, QTableView *processesTableView, QListView* logListView)
+    : QMainWindow(parent),
+      processesTableView(processesTableView),
+      logListView(logListView)
 
 {
-    m_ui = Ui::MainWindow();
-    m_ui.setupUi(this);
+    QWidget* centerWidget = new QWidget();
+    QVBoxLayout* layout = new QVBoxLayout(centerWidget);
+
+    layout->addWidget(processesTableView);
+    layout->addWidget(logListView);
+
+    setCentralWidget(centerWidget);
 }
 
 
