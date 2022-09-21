@@ -1,14 +1,14 @@
 #include "mainwindow.h"
 #include "mymodel.h"
+#include "processesmodel.h"
 #include <QTableView>
-#include <QTreeView>
 #include <QApplication>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    MyModel processesModel;
+    ProcessesModel processesModel;
     QTableView processesTableView;
     processesTableView.setModel(&processesModel);
 
@@ -17,7 +17,6 @@ int main(int argc, char *argv[])
     logListView.setModel(&logModel);
 
     MainWindow window(nullptr,&processesTableView,&logListView);
-    QTreeView tableView;
 
     window.show();
     return a.exec();

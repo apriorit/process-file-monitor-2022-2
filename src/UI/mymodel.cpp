@@ -2,6 +2,7 @@
 #include "qbrush.h"
 #include "qfont.h"
 #include <QTime>
+
 MyModel::MyModel(QObject *parent)
     : QAbstractTableModel(parent),
       timer{std::make_unique<QTimer>(this)}

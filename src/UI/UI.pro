@@ -12,11 +12,13 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     mymodel.cpp \
+    proccessmonitor.cpp \
     processesmodel.cpp
 
 HEADERS += \
     mainwindow.h \
     mymodel.h \
+    proccessmonitor.h \
     processesmodel.h
 
 FORMS += \

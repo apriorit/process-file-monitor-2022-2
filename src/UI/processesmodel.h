@@ -3,6 +3,8 @@
 
 #include <QAbstractTableModel>
 
+class IProccessMonitor;
+
 class ProcessesModel : public QAbstractTableModel
 {
     Q_OBJECT
@@ -11,7 +13,7 @@ public:
     explicit ProcessesModel(QObject *parent = nullptr);
 
     // Header:
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
+    //QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
     // Basic functionality:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -20,6 +22,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
 private:
+    IProccessMonitor* proccessMonitor;
 };
 
 #endif // PROCESSESMODEL_H
