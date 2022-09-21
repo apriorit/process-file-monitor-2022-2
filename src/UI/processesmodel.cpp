@@ -1,5 +1,5 @@
 #include "processesmodel.h"
-#include "proccessmonitor.h"
+#include "processmonitor.h"
 ProcessesModel::ProcessesModel(QObject *parent)
     : QAbstractTableModel(parent)
 {

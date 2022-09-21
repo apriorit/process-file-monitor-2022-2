@@ -1,13 +1,13 @@
 
 #include <gtest/gtest.h>
 #include <gmock/gmock-matchers.h>
-#include "../proccessmonitor.h"
+#include "../processmonitor.h"
 using namespace testing;
 
-TEST(ProccessMonitorTest, ProccessInfoCheckEquality)
+TEST(ProcessMonitorTest, ProcessInfoCheckEquality)
 {
-    ProccessInfo proccess1(10,"proc1");
-    ProccessInfo proccess2(5,"proc2");
-    EXPECT_EQ(proccess1 < proccess2, false);
-    EXPECT_EQ(proccess2 < proccess1, true);
+    ProcessInfo process1(10,"proc1");
+    ProcessInfo process2(5,"proc2");
+    EXPECT_EQ(process1 < process2, false);
+    EXPECT_EQ(process2 < process1, true);
 }

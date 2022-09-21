@@ -3,7 +3,7 @@
 
 #include <QAbstractTableModel>
 
-class IProccessMonitor;
+class IProcessMonitor;
 
 class ProcessesModel : public QAbstractTableModel
 {
@@ -22,7 +22,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
 private:
-    IProccessMonitor* proccessMonitor;
+    IProcessMonitor* processMonitor;
 };
 
 #endif // PROCESSESMODEL_H

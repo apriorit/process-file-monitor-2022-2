@@ -8,4 +8,4 @@ CONFIG += qt
 
 SOURCES += \
         main.cpp         tst_processesmonitortest.cpp \
-        ../proccessmonitor.cpp
+        ../processmonitor.cpp
