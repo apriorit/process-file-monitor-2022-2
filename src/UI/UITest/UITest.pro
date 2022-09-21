@@ -7,4 +7,5 @@ CONFIG += thread
 CONFIG += qt
 
 SOURCES += \
-        main.cpp         tst_processesmonitortest.cpp
+        main.cpp         tst_processesmonitortest.cpp \
+        ../proccessmonitor.cpp

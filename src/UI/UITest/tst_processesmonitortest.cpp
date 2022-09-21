@@ -4,9 +4,10 @@
 #include "../proccessmonitor.h"
 using namespace testing;
 
-TEST(UITest, ProcessesMonitorTest)
+TEST(ProccessMonitorTest, ProccessInfoCheckEquality)
 {
-    EXPECT_EQ(1, 1);
-    ASSERT_THAT(0, Eq(0));
+    ProccessInfo proccess1(10,"proc1");
+    ProccessInfo proccess2(5,"proc2");
+    EXPECT_EQ(proccess1 < proccess2, false);
+    EXPECT_EQ(proccess2 < proccess1, true);
 }
-
