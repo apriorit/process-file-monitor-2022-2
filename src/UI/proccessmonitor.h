@@ -23,4 +23,5 @@ public:
     virtual ~IProccessMonitor();
 };
 
-class ProccessMonitor : public IProccessMonitor{};
+class ProccessMonitor : public IProccessMonitor{
+};
