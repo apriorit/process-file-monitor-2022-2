@@ -7,13 +7,13 @@ struct ProcessInfo;
 
 class IProcessesSeeker{
 public:
-    virtual std::set<ProcessInfo> getSetOfSystemProcesses() = 0;
+    virtual std::vector<ProcessInfo> getSystemProcesses() = 0;
 };
 
 class ProcessesSeeker : IProcessesSeeker
 {
 public:
-    std::set<ProcessInfo> getSetOfSystemProcesses() override;
+    std::vector<ProcessInfo> getSystemProcesses() override;
     ProcessesSeeker();
 private:
     ProcessInfo ProcessFromPid(const DWORD Pid);

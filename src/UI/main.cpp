@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
     MainWindow window(nullptr,&processesTableView,&logListView);
 
     ProcessesSeeker ps;
-    ps.getSetOfSystemProcesses();
+    ps.getSystemProcesses();
 
     window.show();
     return a.exec();

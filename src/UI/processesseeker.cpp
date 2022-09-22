@@ -36,13 +36,13 @@ ProcessInfo ProcessesSeeker::ProcessFromPid(const DWORD Pid){
     throw std::invalid_argument("Cannot open process");
 }
 
-std::set<ProcessInfo> ProcessesSeeker::getSetOfSystemProcesses(){
-    std::set<ProcessInfo> currentRunningProcesses;
+std::vector<ProcessInfo> ProcessesSeeker::getSystemProcesses(){
+    std::vector<ProcessInfo> currentRunningProcesses;
     DWORD aProcesses[1024], cbNeeded, cProcesses;
     unsigned int i;
 
     if(!EnumProcesses(aProcesses, sizeof(aProcesses),&cbNeeded)){
-        return std::set<ProcessInfo>();
+        return std::vector<ProcessInfo>();
     }
 
     cProcesses = cbNeeded / sizeof(DWORD);
@@ -50,7 +50,7 @@ std::set<ProcessInfo> ProcessesSeeker::getSetOfSystemProcesses(){
     for(i = 0; i < cProcesses; i++){
         if(aProcesses[i] != 0 ){
             try{
-                currentRunningProcesses.emplace(ProcessFromPid(aProcesses[i]));
+                currentRunningProcesses.push_back(ProcessFromPid(aProcesses[i]));
             }
             catch(std::invalid_argument){
                 continue;
@@ -58,7 +58,7 @@ std::set<ProcessInfo> ProcessesSeeker::getSetOfSystemProcesses(){
         }
 
     }
-    return std::set<ProcessInfo>();
+    return std::vector<ProcessInfo>();
 }
 
 

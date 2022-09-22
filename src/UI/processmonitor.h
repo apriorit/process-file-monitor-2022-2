@@ -1,6 +1,6 @@
 #pragma once
 #include <QString>
-#include <set>
+#include <vector>
 
 class IProcessesSeeker;
 
@@ -52,11 +52,11 @@ public:
     void updateProcessesTable() override;
     ProcessInfo getCopyOfProcessInfoByIndex(const int index) override;
     ProcessInfo getCopyOfProcessInfoByPid(const int Pid) override;
-    static std::set<ProcessInfo> mergeProcessesSets(const std::set<ProcessInfo>& oldSet ,
-                                                    const std::set<ProcessInfo>& newSet);
+    static std::vector<ProcessInfo> mergeProcessesLists(const std::vector<ProcessInfo>& oldProcesses ,
+                                                    const std::vector<ProcessInfo>& currentProcesses);
     void setProcessEditableField(const ProcessEditableFields field) override;
     ~ProcessMonitor();
 private:
-    std::set<ProcessInfo> processesInfo;
+    std::vector<ProcessInfo> processesInfo;
     IProcessesSeeker* processesSeeker;
 };

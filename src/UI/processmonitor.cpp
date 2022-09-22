@@ -22,7 +22,7 @@ bool operator==(const ProcessInfo& first , const ProcessInfo& second){
 }
 
 void ProcessMonitor::updateProcessesTable() {
-    processesSeeker->getSetOfSystemProcesses();
+    processesSeeker->getSystemProcesses();
 }
 
 ProcessInfo ProcessMonitor::getCopyOfProcessInfoByIndex(const int index){
@@ -33,9 +33,9 @@ ProcessInfo ProcessMonitor::getCopyOfProcessInfoByPid(const int index){
     return ProcessInfo(index,"test");
 }
 
-std::set<ProcessInfo> ProcessMonitor::mergeProcessesSets(const std::set<ProcessInfo>& oldSet ,
-                                                                const std::set<ProcessInfo>& newSet){
-    return newSet;
+std::vector<ProcessInfo> ProcessMonitor::mergeProcessesLists(const std::vector<ProcessInfo>& oldProcesses ,
+                                                                const std::vector<ProcessInfo>& currentProcesses){
+    return currentProcesses;
 }
 
 void ProcessMonitor::setProcessEditableField(const ProcessEditableFields field){
