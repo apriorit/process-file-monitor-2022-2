@@ -2,11 +2,13 @@
 #include <QString>
 #include <set>
 
+class IProcessesSeeker;
+
 struct ProcessInfo{
-    ProcessInfo(int pid,const QString& name)
-        :Pid{pid},
-        Name{name}{}
+    ProcessInfo(int pid,const QString& Path);
+
     const int Pid;
+    const QString Path;
     const QString Name;
     bool readPermission = true;
     bool writePermission = true;
@@ -17,6 +19,9 @@ struct ProcessInfo{
     bool isDllInjected = false;
 
     friend bool operator<(const ProcessInfo& first , const ProcessInfo& second);
+
+private:
+    QString getNameFromThePath();
 };
 
 enum class ProcessEditableFields{
@@ -38,9 +43,7 @@ public:
     virtual ~IProcessMonitor(){}
 };
 
-class IProcessesSeeker{
-    virtual std::set<ProcessInfo> getSetOfSystemProcesses();
-};
+
 
 class ProcessMonitor : public IProcessMonitor{
 public:

@@ -1,4 +1,17 @@
 #include "processmonitor.h"
+#include "processesseeker.h"
+#include <string>
+
+ProcessInfo::ProcessInfo(int pid,const QString& Path):Pid{pid},
+    Path{Path},
+    Name{getNameFromThePath()}{}
+
+QString ProcessInfo::getNameFromThePath(){
+    std::string stdPath = Path.toStdString();
+    std::size_t lastSeparator = stdPath.find_last_of("/\\");
+    std::string name = stdPath.substr(lastSeparator+1);
+    return QString::fromStdString(name);
+}
 
 bool operator<(const ProcessInfo& first , const ProcessInfo& second){
     return first.Pid < second.Pid;
