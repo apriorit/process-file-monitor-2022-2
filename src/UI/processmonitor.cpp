@@ -17,8 +17,12 @@ bool operator<(const ProcessInfo& first , const ProcessInfo& second){
     return first.Pid < second.Pid;
 }
 
-void ProcessMonitor::updateProcessesTable() {
+bool operator==(const ProcessInfo& first , const ProcessInfo& second){
+    return first.Pid == second.Pid && first.Path == second.Path;
+}
 
+void ProcessMonitor::updateProcessesTable() {
+    processesSeeker->getSetOfSystemProcesses();
 }
 
 ProcessInfo ProcessMonitor::getCopyOfProcessInfoByIndex(const int index){
@@ -31,7 +35,7 @@ ProcessInfo ProcessMonitor::getCopyOfProcessInfoByPid(const int index){
 
 std::set<ProcessInfo> ProcessMonitor::mergeProcessesSets(const std::set<ProcessInfo>& oldSet ,
                                                                 const std::set<ProcessInfo>& newSet){
-    return std::set<ProcessInfo>();
+    return newSet;
 }
 
 void ProcessMonitor::setProcessEditableField(const ProcessEditableFields field){

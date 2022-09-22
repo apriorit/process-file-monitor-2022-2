@@ -19,7 +19,7 @@ struct ProcessInfo{
     bool isDllInjected = false;
 
     friend bool operator<(const ProcessInfo& first , const ProcessInfo& second);
-
+    friend bool operator==(const ProcessInfo& first , const ProcessInfo& second);
 private:
     QString getNameFromThePath();
 };
