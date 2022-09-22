@@ -38,14 +38,14 @@ public:
     virtual ~IProcessMonitor(){}
 };
 
-class IGetProcessesInfo{
-    virtual std::set<ProcessInfo> getProcessesInfo();
+class IProcessesSeeker{
+    virtual std::set<ProcessInfo> getSetOfSystemProcesses();
 };
 
 class ProcessMonitor : public IProcessMonitor{
 public:
-    ProcessMonitor(IGetProcessesInfo* getProcessesInfo)
-        :getProcessesInfo{getProcessesInfo}{};
+    ProcessMonitor(IProcessesSeeker* processesSeeker)
+        :processesSeeker{processesSeeker}{};
     void updateProcessesTable() override;
     ProcessInfo getCopyOfProcessInfoByIndex(const int index) override;
     ProcessInfo getCopyOfProcessInfoByPid(const int Pid) override;
@@ -55,5 +55,5 @@ public:
     ~ProcessMonitor();
 private:
     std::set<ProcessInfo> processesInfo;
-    IGetProcessesInfo* getProcessesInfo;
+    IProcessesSeeker* processesSeeker;
 };
