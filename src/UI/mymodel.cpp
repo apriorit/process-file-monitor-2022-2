@@ -1,7 +1,5 @@
+#include "pch.h"
 #include "mymodel.h"
-#include "qbrush.h"
-#include "qfont.h"
-#include <QTime>
 
 MyModel::MyModel(QObject *parent)
     : QAbstractTableModel(parent),

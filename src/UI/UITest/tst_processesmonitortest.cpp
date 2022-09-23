@@ -1,8 +1,4 @@
-
-#include <gtest/gtest.h>
-#include <gmock/gmock-matchers.h>
-#include <gmock/gmock.h>
-#include <iostream>
+#include "pch.h"
 #include "../processmonitor.h"
 #include "../processesseeker.h"
 

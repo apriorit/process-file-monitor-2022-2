@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "processesmodel.h"
 #include "processmonitor.h"
 ProcessesModel::ProcessesModel(QObject *parent)

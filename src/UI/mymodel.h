@@ -5,7 +5,7 @@
 #include "qtimer.h"
 #include <memory>
 
-const int COLS = 3;
+const int COLS = 4;
 const int ROWS = 2;
 
 class MyModel : public QAbstractTableModel

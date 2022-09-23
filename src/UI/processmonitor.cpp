@@ -1,6 +1,6 @@
+#include "pch.h"
 #include "processmonitor.h"
 #include "processesseeker.h"
-#include <string>
 
 ProcessInfo::ProcessInfo(int pid,const QString& Path):Pid{pid},
     Path{Path},

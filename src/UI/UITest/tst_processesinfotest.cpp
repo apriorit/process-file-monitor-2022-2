@@ -1,7 +1,6 @@
-
-#include <gtest/gtest.h>
-#include <gmock/gmock-matchers.h>
+#include "pch.h"
 #include "../processmonitor.h"
+
 using namespace testing;
 
 TEST(ProcessInfoTest, ProcessInfoCheckGreater)

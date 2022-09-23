@@ -1,9 +1,6 @@
+#include "pch.h"
 #include "processesseeker.h"
 #include "processmonitor.h"
-#include "qdebug.h"
-#include <stdio.h>
-#include <tchar.h>
-#include <psapi.h>
 
 ProcessesSeeker::ProcessesSeeker()
 {

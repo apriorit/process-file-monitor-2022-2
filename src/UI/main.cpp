@@ -1,9 +1,9 @@
+#include "pch.h"
 #include "mainwindow.h"
 #include "mymodel.h"
 #include "processesmodel.h"
 #include "processesseeker.h"
-#include <QTableView>
-#include <QApplication>
+
 
 int main(int argc, char *argv[])
 {

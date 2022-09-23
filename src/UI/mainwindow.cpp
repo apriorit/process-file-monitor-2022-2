@@ -1,5 +1,6 @@
+#include "pch.h"
+#include "ui_mainwindow.h"
 #include "mainwindow.h"
-#include <QVBoxLayout>
 
 MainWindow::MainWindow(QWidget *parent, QTableView *processesTableView, QListView* logListView)
     : QMainWindow(parent),
