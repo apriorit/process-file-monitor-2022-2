@@ -58,7 +58,7 @@ std::vector<ProcessInfo> ProcessesSeeker::getSystemProcesses(){
         }
 
     }
-    return std::vector<ProcessInfo>();
+    return currentRunningProcesses;
 }
 
 
