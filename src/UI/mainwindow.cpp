@@ -14,6 +14,8 @@ MainWindow::MainWindow(QWidget *parent, QTableView *processesTableView, QListVie
     layout->addWidget(processesTableView);
     layout->addWidget(logListView);
 
+
+
     setCentralWidget(centerWidget);
 }
 

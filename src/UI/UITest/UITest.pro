@@ -12,10 +12,11 @@ CONFIG   += cmdline precompile_header
 PRECOMPILED_HEADER = pch.h
 
 SOURCES += \
-        main.cpp         tst_processesmonitortest.cpp \
-        tst_processesinfotest.cpp \
-        ../processmonitor.cpp \
-        ../processseeker.cpp
+    ../processesseeker.cpp \
+    main.cpp \
+    tst_processesmonitortest.cpp \
+    tst_processesinfotest.cpp \
+    ../processmonitor.cpp \
 
 HEADERS += \
     pch.h
