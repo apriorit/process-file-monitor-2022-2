@@ -1,23 +1,11 @@
 #include "pch.h"
-#include "ui_mainwindow.h"
 #include "mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent, QTableView *processesTableView, QListView* logListView)
-    : QMainWindow(parent),
-      processesTableView(processesTableView),
-      logListView(logListView)
-
+MainWindow::MainWindow(QWidget *parent,ProcessesModel  *processesModel, MyModel* logModel)
+    : QMainWindow(parent)
 {
-    QWidget* centerWidget = new QWidget();
-    QVBoxLayout* layout = new QVBoxLayout(centerWidget);
-
-    layout->addWidget(processesTableView);
-    layout->addWidget(logListView);
-
-
-
-    setCentralWidget(centerWidget);
+    m_ui = Ui::MainWindow();
+    m_ui.setupUi(this);
+    m_ui.ProcessesView->setModel(processesModel);
+    m_ui.logView->setModel(logModel);
 }
-
-
-
