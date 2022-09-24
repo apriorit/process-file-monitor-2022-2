@@ -17,6 +17,7 @@ SOURCES += \
     tst_processesmonitortest.cpp \
     tst_processesinfotest.cpp \
     ../processmonitor.cpp \
+    tst_processesseeker.cpp
 
 HEADERS += \
     pch.h

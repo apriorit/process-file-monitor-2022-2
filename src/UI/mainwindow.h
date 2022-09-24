@@ -2,7 +2,6 @@
 #define MAINWINDOW_H
 
 #include "ui_mainwindow.h"
-#include <QMainWindow>
 #include "processesmodel.h"
 #include "mymodel.h"
 

@@ -1,9 +1,7 @@
 #ifndef MYMODEL_H
 #define MYMODEL_H
-
 #include <QAbstractTableModel>
 #include "qtimer.h"
-#include <memory>
 
 const int COLS = 4;
 const int ROWS = 2;
@@ -23,7 +21,7 @@ public slots:
     void timerHit();
 
 private:
-    std::unique_ptr<QTimer> timer;
+    QTimer* timer;
     QString m_gridData[ROWS][COLS];
 
 signals:

@@ -3,11 +3,11 @@
 
 MyModel::MyModel(QObject *parent)
     : QAbstractTableModel(parent),
-      timer{std::make_unique<QTimer>(this)}
+      timer{new QTimer(this)}
 
 {
     timer->setInterval(1000);
-    connect(timer.get(), &QTimer::timeout , this, &MyModel::timerHit);
+    connect(timer, &QTimer::timeout , this, &MyModel::timerHit);
     timer->start();
 }
 
@@ -48,8 +48,6 @@ QVariant MyModel::data(const QModelIndex &index, int role) const
     case Qt::BackgroundRole:
         return QBrush(Qt::red);
     }
-
-
     return QVariant();
 }
 

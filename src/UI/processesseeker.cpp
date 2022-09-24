@@ -2,61 +2,67 @@
 #include "processesseeker.h"
 #include "processmonitor.h"
 
-ProcessesSeeker::ProcessesSeeker()
-{
-
-}
+ProcessesSeeker::ProcessesSeeker(){}
 
 ProcessInfo ProcessesSeeker::ProcessFromPid(const DWORD Pid){
-    TCHAR szProcessName[MAX_PATH] = TEXT("<unknown>");
-
+    TCHAR processName[MAX_PATH] = TEXT("<unknown>");
     HANDLE hProcess = OpenProcess( PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, Pid);
 
     if(NULL != hProcess){
-        HMODULE hMod;
-        DWORD cbNeeded;
+        HMODULE hModule;
+        DWORD returnedByteCount;
 
-        if(EnumProcessModules( hProcess, &hMod, sizeof(hMod),
-                               &cbNeeded) ){
+        if(EnumProcessModules( hProcess, &hModule, sizeof(hModule),
+                               &returnedByteCount) ){
 
-            GetModuleFileNameEx( hProcess, hMod, szProcessName,
-                               sizeof(szProcessName)/sizeof(TCHAR));
+            GetModuleFileNameEx( hProcess, hModule, processName,
+                               sizeof(processName)/sizeof(TCHAR));
         }
 
-         std::wstring stdWProcessName(szProcessName);
+         std::wstring stdWProcessName(processName);
          QString qProcessName = QString::fromStdWString(stdWProcessName);
-
-         qDebug() << qProcessName;
 
          return ProcessInfo(Pid,qProcessName);
     }
-    throw std::invalid_argument("Cannot open process");
+    throw std::invalid_argument("Failed to open a process");
 }
 
-std::vector<ProcessInfo> ProcessesSeeker::getSystemProcesses(){
-    std::vector<ProcessInfo> currentRunningProcesses;
-    DWORD aProcesses[1024], cbNeeded, cProcesses;
-    unsigned int i;
+std::vector<DWORD> ProcessesSeeker::getProcessesPids(){
+    DWORD sizeOfProcessesBuffer = 128;
+    std::vector<DWORD> processesPids;
 
-    if(!EnumProcesses(aProcesses, sizeof(aProcesses),&cbNeeded)){
-        return std::vector<ProcessInfo>();
-    }
-
-    cProcesses = cbNeeded / sizeof(DWORD);
-
-    for(i = 0; i < cProcesses; i++){
-        if(aProcesses[i] != 0 ){
-            try{
-                currentRunningProcesses.push_back(ProcessFromPid(aProcesses[i]));
-            }
-            catch(std::invalid_argument){
-                continue;
-            };
+    while(true){
+        DWORD processesBuffer[sizeOfProcessesBuffer];
+        DWORD returnedByteCount = 0;
+        if(!EnumProcesses(processesBuffer, sizeof(processesBuffer),&returnedByteCount)){
+            return std::vector<DWORD>();
         }
+        DWORD processesAddedToArrayCount = returnedByteCount / sizeof(DWORD);
+        if(sizeOfProcessesBuffer == processesAddedToArrayCount){
+            sizeOfProcessesBuffer *= 2;
+        }
+        else{
+            processesPids.assign(processesBuffer,processesBuffer+processesAddedToArrayCount);
+            break;
+        }
+    }
+    return processesPids;
+}
 
+std::vector<ProcessInfo> ProcessesSeeker::getSystemProcesses(){  
+    const auto processesPids = getProcessesPids();
+    std::vector<ProcessInfo> currentRunningProcesses;
+    currentRunningProcesses.reserve(processesPids.size());
+
+    for(const auto Pid : processesPids){
+        if(Pid == 0)
+            continue;
+        try{
+            currentRunningProcesses.push_back(ProcessFromPid(Pid));
+        }
+        catch(const std::invalid_argument&){
+            continue;
+        };
     }
     return currentRunningProcesses;
 }
-
-
-

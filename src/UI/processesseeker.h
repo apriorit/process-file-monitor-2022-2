@@ -17,6 +17,7 @@ public:
     ProcessesSeeker();
 private:
     ProcessInfo ProcessFromPid(const DWORD Pid);
+    std::vector<DWORD> getProcessesPids();
 };
 
 #endif // PROCESSESSEEKER_H
