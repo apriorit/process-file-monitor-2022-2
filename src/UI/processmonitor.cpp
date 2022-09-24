@@ -13,6 +13,15 @@ QString ProcessInfo::getNameFromThePath(){
     return QString::fromStdString(name);
 }
 
+bool ProcessInfo::settingsEquals(const ProcessInfo& other) const{
+    return readPermission == other.readPermission
+            && writePermission == other.writePermission
+            && openPermission == other.openPermission
+            && deletePermission == other.deletePermission
+            && isMonitored == other.isMonitored
+            && isDllInjected == other.isDllInjected;
+}
+
 bool operator<(const ProcessInfo& first , const ProcessInfo& second){
     return first.Pid < second.Pid;
 }
@@ -20,13 +29,7 @@ bool operator<(const ProcessInfo& first , const ProcessInfo& second){
 bool operator==(const ProcessInfo& first , const ProcessInfo& second){
     return first.Pid == second.Pid
             && first.Path == second.Path
-            && first.Name == second.Name
-            && first.deletePermission == second.deletePermission
-            && first.openPermission == second.openPermission
-            && first.readPermission == second.readPermission
-            && first.writePermission == second.writePermission
-            && first.isDllInjected == second.isDllInjected
-            && first.isMonitored == second.isMonitored;
+            && first.Name == second.Name;
 }
 
 void ProcessMonitor::updateProcessesTable() {
@@ -48,14 +51,14 @@ std::vector<ProcessInfo> ProcessMonitor::mergeProcessesLists(const std::vector<P
     auto itCurrent = currentProcesses.begin();
 
     while(itOld != oldProcesses.end() && itCurrent != currentProcesses.end()){
+        if(*itOld == *itCurrent){
+            updatedProcesses.push_back(*itOld);
+            itOld++;
+            itCurrent++;
+        }
         if (itOld->Pid > itCurrent->Pid
                 || (itOld->Pid == itCurrent->Pid && itOld->Path != itCurrent->Path)){
             updatedProcesses.push_back(*itCurrent);
-            itCurrent++;
-        }
-        else if(itOld->Pid == itCurrent->Pid){
-            updatedProcesses.push_back(*itOld);
-            itOld++;
             itCurrent++;
         }
         else{
