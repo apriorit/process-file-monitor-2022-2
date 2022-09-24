@@ -126,4 +126,3 @@ TEST(ProcessMonitorTest, mergeProcessesOldProcessesTerminated){
 
     EXPECT_EQ(result, expected);
 }
-
