@@ -50,11 +50,11 @@ std::vector<ProcessInfo> ProcessMonitor::mergeProcessesLists(const std::vector<P
     while(itOld != oldProcesses.end() && itCurrent != currentProcesses.end()){
         if (itOld->Pid > itCurrent->Pid
                 || (itOld->Pid == itCurrent->Pid && itOld->Path != itCurrent->Path)){
-            updatedProcesses.push_back(*itCurrent);
+            updatedProcesses.emplace_back(std::move(*itCurrent));
             itCurrent++;
         }
         else if(itOld->Pid == itCurrent->Pid){
-            updatedProcesses.push_back(*itOld);
+            updatedProcesses.emplace_back(std::move(*itOld));
             itOld++;
             itCurrent++;
         }
@@ -64,7 +64,7 @@ std::vector<ProcessInfo> ProcessMonitor::mergeProcessesLists(const std::vector<P
     }
 
     while(itCurrent != currentProcesses.end()){
-        updatedProcesses.push_back(*itCurrent);
+        updatedProcesses.emplace_back(std::move(*itCurrent));
         itCurrent++;
     }
 
