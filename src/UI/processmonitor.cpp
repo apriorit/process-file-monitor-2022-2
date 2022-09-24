@@ -21,7 +21,6 @@ bool operator==(const ProcessInfo& first , const ProcessInfo& second){
     return first.Pid == second.Pid
             && first.Path == second.Path
             && first.Name == second.Name
-            && first.closePermission == second.closePermission
             && first.deletePermission == second.deletePermission
             && first.openPermission == second.openPermission
             && first.readPermission == second.readPermission

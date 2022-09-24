@@ -13,7 +13,6 @@ struct ProcessInfo{
     bool readPermission = true;
     bool writePermission = true;
     bool openPermission = true;
-    bool closePermission = true;
     bool deletePermission = true;
     bool isMonitored = false;
     bool isDllInjected = false;
@@ -28,7 +27,6 @@ enum class ProcessEditableFields{
     readPerm,
     writePerm,
     openPerm,
-    closePerm,
     deletePerm,
     isMonitored,
     isDllInjected
@@ -42,8 +40,6 @@ public:
     virtual void setProcessEditableField(const ProcessEditableFields field) = 0;
     virtual ~IProcessMonitor(){}
 };
-
-
 
 class ProcessMonitor : public IProcessMonitor{
 public:

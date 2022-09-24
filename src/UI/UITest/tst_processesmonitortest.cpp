@@ -30,7 +30,6 @@ TEST(ProcessMonitorTest, mergeProcessesBothEquals){
 
 TEST(ProcessMonitorTest, mergeProcessesBothEqualsSaveOldSettings){
     ProcessInfo processInfo(10,"C:\\Berserk.exe");
-    processInfo.closePermission = false;
     processInfo.deletePermission = false;
     processInfo.readPermission = false;
     processInfo.isDllInjected = true;
