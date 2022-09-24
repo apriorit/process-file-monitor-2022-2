@@ -9,16 +9,8 @@ ProcessInfo ProcessesSeeker::ProcessFromPid(const DWORD Pid){
     HANDLE hProcess = OpenProcess( PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, Pid);
 
     if(NULL != hProcess){
-        HMODULE hModule;
-        DWORD returnedByteCount;
-
-        if(EnumProcessModules( hProcess, &hModule, sizeof(hModule),
-                               &returnedByteCount) ){
-
-            GetModuleFileNameEx( hProcess, hModule, processName,
+         GetModuleFileNameEx( hProcess, NULL, processName,
                                sizeof(processName)/sizeof(TCHAR));
-        }
-
          std::wstring stdWProcessName(processName);
          QString qProcessName = QString::fromStdWString(stdWProcessName);
 
