@@ -3,7 +3,6 @@
 
 #include "ui_mainwindow.h"
 #include "processesmodel.h"
-#include "mymodel.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -14,7 +13,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent,ProcessesModel  *processesModel, MyModel* logModel);
+    MainWindow(QWidget *parent,ProcessesModel  *processesModel);
 
 private:
     Ui::MainWindow m_ui;

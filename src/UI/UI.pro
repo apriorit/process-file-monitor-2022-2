@@ -14,14 +14,12 @@ PRECOMPILED_HEADER = pch.h
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
-    mymodel.cpp \
     processesmodel.cpp \
     processesseeker.cpp \
     processmonitor.cpp
 
 HEADERS += \
     mainwindow.h \
-    mymodel.h \
     pch.h \
     processesmodel.h \
     processesseeker.h \
