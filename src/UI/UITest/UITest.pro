@@ -14,10 +14,13 @@ PRECOMPILED_HEADER = pch.h
 SOURCES += \
     ../processesseeker.cpp \
     main.cpp \
+    processmonitortestingutility.cpp \
+    tst_bothprocesseslistequals.cpp \
     tst_processesmonitortest.cpp \
     tst_processesinfotest.cpp \
     ../processmonitor.cpp \
     tst_processesseeker.cpp
 
 HEADERS += \
-    pch.h
+    pch.h \
+    processmonitortestingutility.h
