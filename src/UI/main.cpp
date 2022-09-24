@@ -1,11 +1,13 @@
+#include "pch.h"
 #include "mainwindow.h"
-
-#include <QApplication>
+#include "processesmodel.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
+    ProcessesModel processesModel;
+
+    MainWindow window(nullptr,&processesModel);
+    window.show();
     return a.exec();
 }

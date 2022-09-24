@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include "ui_mainwindow.h"
-#include <QMainWindow>
+#include "processesmodel.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -13,7 +13,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);    
+    MainWindow(QWidget *parent,ProcessesModel  *processesModel);
 
 private:
     Ui::MainWindow m_ui;
