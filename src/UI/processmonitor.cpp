@@ -2,7 +2,8 @@
 #include "processmonitor.h"
 #include "processesseeker.h"
 
-ProcessInfo::ProcessInfo(int pid,const QString& Path):Pid{pid},
+ProcessInfo::ProcessInfo(DWORD pid,const QString& Path)
+    :Pid{pid},
     Path{Path},
     Name{getNameFromThePath()}{}
 
@@ -33,17 +34,47 @@ bool operator==(const ProcessInfo& first , const ProcessInfo& second){
 }
 
 void ProcessMonitor::updateProcessesTable() {
-    processesSeeker->getSystemProcesses();
+    processesInfo = mergeProcessesLists(processesInfo, processesSeeker->getSystemProcesses());
 }
 
-ProcessInfo ProcessMonitor::getCopyOfProcessInfoByIndex(const int index){
-    return ProcessInfo(index,"test");
+ProcessInfo ProcessMonitor::getCopyOfProcessInfoByIndex(const size_t Index) const{
+    return processesInfo[Index];
 }
 
-ProcessInfo ProcessMonitor::getCopyOfProcessInfoByPid(const int Pid){
-    return ProcessInfo(Pid,"test");
+ProcessInfo ProcessMonitor::getCopyOfProcessInfoByPid(const DWORD Pid) const{
+    return getCopyOfProcessInfoByIndex(getIndexOfProcessBySpecyficPid(Pid));
 }
 
+void ProcessMonitor::setProcessEditableFieldByIndex(const size_t Index, const ProcessEditableFields field, const bool value){
+    switch(field){
+    case ProcessEditableFields::readPerm:
+        processesInfo[Index].readPermission = value;
+    break;
+    case ProcessEditableFields::writePerm:
+        processesInfo[Index].writePermission = value;
+    break;
+    case ProcessEditableFields::openPerm:
+        processesInfo[Index].openPermission = value;
+    break;
+    case ProcessEditableFields::deletePerm:
+        processesInfo[Index].deletePermission = value;
+    break;
+    case ProcessEditableFields::isMonitored:
+        processesInfo[Index].isMonitored = value;
+    break;
+    case ProcessEditableFields::isDllInjected:
+        processesInfo[Index].isDllInjected = value;
+    break;
+    }
+}
+
+void ProcessMonitor::setProcessEditableFieldByPid(const DWORD Pid, const ProcessEditableFields field, const bool value){
+    setProcessEditableFieldByIndex(getIndexOfProcessBySpecyficPid(Pid), field, value);
+}
+
+size_t ProcessMonitor::getProcessesCount() const{
+    return processesInfo.size();
+}
 std::vector<ProcessInfo> ProcessMonitor::mergeProcessesLists(const std::vector<ProcessInfo>& oldProcesses ,
                                                                 const std::vector<ProcessInfo>& currentProcesses){
     std::vector<ProcessInfo> updatedProcesses;
@@ -74,12 +105,14 @@ std::vector<ProcessInfo> ProcessMonitor::mergeProcessesLists(const std::vector<P
     return updatedProcesses;
 }
 
-void ProcessMonitor::setProcessEditableField(const ProcessEditableFields field){
+ProcessMonitor::~ProcessMonitor(){}
 
+size_t ProcessMonitor::getIndexOfProcessBySpecyficPid(const DWORD Pid) const{
+    for(size_t i = 0 ; i < processesInfo.size() ; i++ ){
+        if(Pid == processesInfo[i].Pid){
+            return i;
+        }
+    }
+    throw std::invalid_argument("There is no Process with given PID !");
 }
-
-ProcessMonitor::~ProcessMonitor(){
-
-}
-
 

@@ -1,13 +1,14 @@
 #pragma once
 #include <QString>
 #include <vector>
+#include <windows.h>
 
 class IProcessesSeeker;
 
 struct ProcessInfo{
-    ProcessInfo(int pid,const QString& Path);
+    ProcessInfo(DWORD pid,const QString& Path);
 
-    const int Pid;
+    const DWORD Pid;
     const QString Path;
     const QString Name;
     bool readPermission = true;
@@ -36,9 +37,11 @@ enum class ProcessEditableFields{
 class IProcessMonitor{
 public:
     virtual void updateProcessesTable() = 0;
-    virtual ProcessInfo getCopyOfProcessInfoByIndex(const int Index) = 0;
-    virtual ProcessInfo getCopyOfProcessInfoByPid(const int Pid) = 0;
-    virtual void setProcessEditableField(const ProcessEditableFields field) = 0;
+    virtual ProcessInfo getCopyOfProcessInfoByIndex(const size_t Index) const = 0;
+    virtual ProcessInfo getCopyOfProcessInfoByPid(const DWORD Pid) const = 0;
+    virtual void setProcessEditableFieldByIndex(const size_t Index, const ProcessEditableFields field, const bool value) = 0;
+    virtual void setProcessEditableFieldByPid(const DWORD Pid, const ProcessEditableFields field, const bool value) = 0;
+    virtual size_t getProcessesCount() const = 0;
     virtual ~IProcessMonitor(){}
 };
 
@@ -47,13 +50,17 @@ public:
     ProcessMonitor(IProcessesSeeker* processesSeeker)
         :processesSeeker{processesSeeker}{};
     void updateProcessesTable() override;
-    ProcessInfo getCopyOfProcessInfoByIndex(const int index) override;
-    ProcessInfo getCopyOfProcessInfoByPid(const int Pid) override;
+    ProcessInfo getCopyOfProcessInfoByIndex(const size_t index) const override;
+    ProcessInfo getCopyOfProcessInfoByPid(const DWORD Pid) const override;
+    void setProcessEditableFieldByIndex(const size_t Index, const ProcessEditableFields field, const bool value) override;
+    void setProcessEditableFieldByPid(const DWORD Pid, const ProcessEditableFields field, const bool value) override;
+    size_t getProcessesCount() const override;
+
     static std::vector<ProcessInfo> mergeProcessesLists(const std::vector<ProcessInfo>& oldProcesses ,
                                                     const std::vector<ProcessInfo>& currentProcesses);
-    void setProcessEditableField(const ProcessEditableFields field) override;
     ~ProcessMonitor();
 private:
+    size_t getIndexOfProcessBySpecyficPid(const DWORD Pid) const;
     std::vector<ProcessInfo> processesInfo;
     IProcessesSeeker* processesSeeker;
 };
