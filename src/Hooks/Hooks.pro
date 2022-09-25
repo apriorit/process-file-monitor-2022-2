@@ -12,7 +12,8 @@ CONFIG += c++17
 SOURCES += \
     dllmain.cpp
 
-HEADERS +=
+HEADERS += \
+    pch.h
 
 # Default rules for deployment.
 unix {

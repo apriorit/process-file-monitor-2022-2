@@ -8,3 +8,6 @@ SOURCES += \
 
 DISTFILES += \
     inject.cpp
+
+HEADERS += \
+    pch.h
