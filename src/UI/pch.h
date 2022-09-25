@@ -8,6 +8,7 @@
 #include <QVBoxLayout>
 #include <QTime>
 #include <QString>
+#include <QTimer>
 #include <memory>
 #include <windows.h>
 #include <stdio.h>
@@ -15,5 +16,6 @@
 #include <psapi.h>
 #include <vector>
 #include <string>
+#include <algorithm>
 
 #endif // PCH_H

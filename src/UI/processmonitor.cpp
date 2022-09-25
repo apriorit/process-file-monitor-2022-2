@@ -34,7 +34,8 @@ bool operator==(const ProcessInfo& first , const ProcessInfo& second){
 }
 
 void ProcessMonitor::updateProcessesTable() {
-    processesInfo = mergeProcessesLists(processesInfo, processesSeeker->getSystemProcesses());
+    std::vector<ProcessInfo> updatedProcesses = processesSeeker->getSystemProcesses();
+    processesInfo = mergeProcessesLists(processesInfo, updatedProcesses);
 }
 
 ProcessInfo ProcessMonitor::getCopyOfProcessInfoByIndex(const size_t Index) const{

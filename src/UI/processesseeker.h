@@ -10,7 +10,7 @@ public:
     virtual std::vector<ProcessInfo> getSystemProcesses() = 0;
 };
 
-class ProcessesSeeker : IProcessesSeeker
+class ProcessesSeeker : public IProcessesSeeker
 {
 public:
     std::vector<ProcessInfo> getSystemProcesses() override;
