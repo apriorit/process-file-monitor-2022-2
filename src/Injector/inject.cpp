@@ -1,15 +1,9 @@
 #include "pch.h"
 
-int inject(DWORD PID)
+int inject(DWORD PID, LPCSTR DllPath)
 {
-    // path to dll
-    //LPCSTR DllPath = "../../Hooks/debug/Hooks.dll";
-    LPCSTR DllPath = "C:\\CodeBase\\Apriorit-Project\\build-src-Desktop_Qt_6_3_1_MinGW_64_bit-Debug\\Hooks\\debug\\Hooks.dll";
-
-
     // Open a handle to target process
     HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, PID);
-
 
     // Allocate memory for the dllpath in the target process
     // length of the path string + null terminator
@@ -24,17 +18,14 @@ int inject(DWORD PID)
     HANDLE hLoadThread = CreateRemoteThread(hProcess, 0, 0,
             (LPTHREAD_START_ROUTINE)GetProcAddress(GetModuleHandleA("Kernel32.dll"), "LoadLibraryA"), pDllPath, 0 ,0);
 
-
     // Wait for the execution of the loader thread to complete
     WaitForSingleObject(hLoadThread, INFINITE);
-
 
     std::cout << "Dll path allocated at: " << pDllPath << std::endl;
     std::cin.get();
 
     // Free the memory allocated for the dll path
     VirtualFreeEx(hProcess, pDllPath, strlen(DllPath) + 1, MEM_RELEASE);
-
 
     return 0;
 }
