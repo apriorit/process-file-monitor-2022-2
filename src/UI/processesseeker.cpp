@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "processesseeker.h"
-#include "processmonitor.h"
+#include "processinfo.h"
 
 ProcessesSeeker::ProcessesSeeker(){}
 

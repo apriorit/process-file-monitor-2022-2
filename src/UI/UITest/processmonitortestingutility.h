@@ -1,6 +1,7 @@
 #pragma once
 #include "../processmonitor.h"
 #include "../processesseeker.h"
+#include "../processinfo.h"
 
 namespace pmtu{
 bool BothProcessesListsEquals(const std::vector<ProcessInfo>& v1,

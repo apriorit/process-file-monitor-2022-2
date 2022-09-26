@@ -1,6 +1,5 @@
-#ifndef PROCESSESSEEKER_H
-#define PROCESSESSEEKER_H
-#include "processmonitor.h"
+#pragma once
+#include "processinfo.h"
 #include <windows.h>
 
 struct ProcessInfo;
@@ -19,5 +18,3 @@ private:
     ProcessInfo ProcessFromPid(const DWORD Pid);
     std::vector<DWORD> getProcessesPids();
 };
-
-#endif // PROCESSESSEEKER_H

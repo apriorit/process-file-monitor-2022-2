@@ -16,6 +16,7 @@ SOURCES += \
     mainwindow.cpp \
     processesmodel.cpp \
     processesseeker.cpp \
+    processinfo.cpp \
     processmonitor.cpp
 
 HEADERS += \
@@ -23,6 +24,7 @@ HEADERS += \
     pch.h \
     processesmodel.h \
     processesseeker.h \
+    processinfo.h \
     processmonitor.h
 
 FORMS += \

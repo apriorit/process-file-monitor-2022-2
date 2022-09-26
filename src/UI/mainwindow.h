@@ -1,5 +1,4 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#pragma once
 
 #include "ui_mainwindow.h"
 #include "processesmodel.h"
@@ -18,4 +17,3 @@ public:
 private:
     Ui::MainWindow m_ui;
 };
-#endif // MAINWINDOW_H

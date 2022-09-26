@@ -19,6 +19,7 @@ SOURCES += \
     tst_processesmonitortest.cpp \
     tst_processesinfotest.cpp \
     ../processmonitor.cpp \
+    ../processinfo.cpp \
     tst_processesseeker.cpp
 
 HEADERS += \

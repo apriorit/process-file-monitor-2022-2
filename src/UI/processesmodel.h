@@ -1,5 +1,4 @@
-#ifndef PROCESSESMODEL_H
-#define PROCESSESMODEL_H
+#pragma once
 
 #include <QAbstractTableModel>
 
@@ -27,5 +26,3 @@ private:
     IProcessMonitor* processMonitor;
     QTimer* timer;
 };
-
-#endif // PROCESSESMODEL_H

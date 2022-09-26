@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "processesmodel.h"
 #include "processmonitor.h"
+#include "processinfo.h"
+
 ProcessesModel::ProcessesModel(QObject *parent, IProcessMonitor* processMonitor)
     : QAbstractTableModel(parent),
       processMonitor{processMonitor},
