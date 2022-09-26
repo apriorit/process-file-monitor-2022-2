@@ -60,7 +60,6 @@ QVariant ProcessesModel::data(const QModelIndex &index, int role) const
     ProcessInfo processInfo = processMonitor->getCopyOfProcessInfoByIndex(row);
     switch(role){
     case Qt::DisplayRole:
-
             switch(col){
             case 0:
                 return QVariant(static_cast<unsigned long long>(processInfo.Pid));
@@ -79,7 +78,7 @@ QVariant ProcessesModel::data(const QModelIndex &index, int role) const
             }
     break;
     case Qt::CheckStateRole:
-        if(col < 2) break;
+        if(col < 2 || col > 6) break;
         switch(col){
             case 2:
                 return boolToCheckStatus(processInfo.readPermission);

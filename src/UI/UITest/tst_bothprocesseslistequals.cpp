@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "../processmonitor.h"
+#include "../processinfo.h"
 #include "processmonitortestingutility.h"
 
 TEST(BothProcessesListsEqualsTest, ProcessesListGotUpdatedForFirstTime){

@@ -1,5 +1,4 @@
 #pragma once
-#include "../processmonitor.h"
 #include "../processesseeker.h"
 #include "../processinfo.h"
 

@@ -4,9 +4,9 @@
 #include "processmonitortestingutility.h"
 using namespace testing;
 
-class ProcessMonitorTest_F : public ::testing::Test{
+class ProcessMonitorTest : public ::testing::Test{
 protected:
-    ProcessMonitorTest_F()
+    ProcessMonitorTest()
         :firstUpdate{{1,"FirstProcess"},{2,"SecondProcess"},{3,"ThirdProcess"}},
         secondUpdate{{1,"FirstDiffrentProcess"},{3,"ThirdProcess"},{4,"ForthProcess"}},
         processesSeeker{}{}
@@ -15,7 +15,7 @@ protected:
     pmtu::ProcessesSeekerMock processesSeeker;
 };
 
-TEST_F(ProcessMonitorTest_F, IProcessesSeekerReturnsElementsInRandomOrder){
+TEST_F(ProcessMonitorTest, IProcessesSeekerReturnsElementsInRandomOrder){
     ProcessMonitor sut(&processesSeeker);
     std::vector<ProcessInfo> notSortedUpdate({{4, "ForthProcess"}, {2, "SecondProcess"}, {1, "FirstProcess"}});
     std::vector<ProcessInfo> expected({{1,"FirstProcess"},{2,"SecondProcess"},{4,"ForthProcess"}});
@@ -32,7 +32,7 @@ TEST_F(ProcessMonitorTest_F, IProcessesSeekerReturnsElementsInRandomOrder){
     }
 }
 
-TEST_F(ProcessMonitorTest_F, getProcessByIndex){
+TEST_F(ProcessMonitorTest, getProcessByIndex){
     ProcessMonitor sut(&processesSeeker);
     auto expected = firstUpdate[0];
     EXPECT_CALL(processesSeeker, getSystemProcesses)
@@ -44,7 +44,7 @@ TEST_F(ProcessMonitorTest_F, getProcessByIndex){
     EXPECT_EQ(expected,result);
 }
 
-TEST_F(ProcessMonitorTest_F, getAndchangeProcessSettingByPid){
+TEST_F(ProcessMonitorTest, getAndchangeProcessSettingByPid){
     ProcessMonitor sut(&processesSeeker);
     auto expected = firstUpdate[0];
     expected.isDllInjected = true;
@@ -57,7 +57,7 @@ TEST_F(ProcessMonitorTest_F, getAndchangeProcessSettingByPid){
     EXPECT_EQ(expected.settingsEquals(sut.getCopyOfProcessInfoByPid(1)), true);
 }
 
-TEST_F(ProcessMonitorTest_F, getAndchangeProcessSettingByIndex){
+TEST_F(ProcessMonitorTest, getAndchangeProcessSettingByIndex){
     ProcessMonitor sut(&processesSeeker);
     auto expected = firstUpdate[0];
     expected.openPermission = false;
@@ -70,7 +70,7 @@ TEST_F(ProcessMonitorTest_F, getAndchangeProcessSettingByIndex){
     EXPECT_EQ(expected.settingsEquals(sut.getCopyOfProcessInfoByIndex(0)), true);
 }
 
-TEST_F(ProcessMonitorTest_F, UpdateProcessesAndCheckCountOfThem){
+TEST_F(ProcessMonitorTest, UpdateProcessesAndCheckCountOfThem){
     ProcessMonitor sut(&processesSeeker);
     EXPECT_CALL(processesSeeker, getSystemProcesses)
             .WillOnce(Return(firstUpdate));
@@ -80,7 +80,7 @@ TEST_F(ProcessMonitorTest_F, UpdateProcessesAndCheckCountOfThem){
     EXPECT_EQ(sut.getProcessesCount(), secondUpdate.size());
 }
 
-TEST(ProcessMonitorTest, mergeProcessesBothEquals){
+TEST(ProcessMonitorTest_Static_Function_Test, mergeProcessesBothEquals){
     std::vector<ProcessInfo> processes({{1,"p1"},{2,"p2"}});
     std::vector<ProcessInfo> update({{1,"p1"},{2,"p2"}});
     std::vector<ProcessInfo> expected({{1,"p1"},{2,"p2"}});
@@ -89,7 +89,7 @@ TEST(ProcessMonitorTest, mergeProcessesBothEquals){
     EXPECT_EQ(result == expected , true);
 }
 
-TEST(ProcessMonitorTest, mergeProcessesBothEqualsSaveOldSettings){
+TEST(ProcessMonitorTest_Static_Function_Test, mergeProcessesBothEqualsSaveOldSettings){
     ProcessInfo processInfo(10,"C:\\Berserk.exe");
     processInfo.deletePermission = false;
     processInfo.readPermission = false;
@@ -104,7 +104,7 @@ TEST(ProcessMonitorTest, mergeProcessesBothEqualsSaveOldSettings){
     EXPECT_EQ(pmtu::BothProcessesListsEquals(result,expected), true);
 }
 
-TEST(ProcessMonitorTest, mergeProcessesNewProcessesBorned){
+TEST(ProcessMonitorTest_Static_Function_Test, mergeProcessesNewProcessesBorned){
     std::vector<ProcessInfo> processes({{1,"p1"},{2,"p2"}});
     std::vector<ProcessInfo> update({{1,"p1"},{2,"p2"},{3,"p3"},{4,"p4"}});
 
@@ -114,7 +114,7 @@ TEST(ProcessMonitorTest, mergeProcessesNewProcessesBorned){
     EXPECT_EQ(result, expected);
 }
 
-TEST(ProcessMonitorTest, mergeProcessesNewProcessUnderTheSamePid){
+TEST(ProcessMonitorTest_Static_Function_Test, mergeProcessesNewProcessUnderTheSamePid){
     std::vector<ProcessInfo> processes({{1,"p1"},{2,"p2"}});
     std::vector<ProcessInfo> update({{1,"p1"},{2,"p22"}});
 
@@ -124,7 +124,7 @@ TEST(ProcessMonitorTest, mergeProcessesNewProcessUnderTheSamePid){
     EXPECT_EQ(result, expected);
 }
 
-TEST(ProcessMonitorTest, mergeProcessesOldProcessesTerminated){
+TEST(ProcessMonitorTest_Static_Function_Test, mergeProcessesOldProcessesTerminated){
     std::vector<ProcessInfo> processes({{1,"p1"},{2,"p2"},{3,"p3"},{4,"p4"}});
     std::vector<ProcessInfo> update({{1,"p1"},{2,"p2"}});
 

@@ -35,7 +35,6 @@ TEST(ProcessInfoTest, SettingsEqualsALL){
     process1.readPermission = false;
     process1.isDllInjected = true;
     process1.isMonitored = true;
-
     ProcessInfo process2(10,"C:\\GAMES\\MGRR.exe");
     process2.deletePermission = false;
     process2.openPermission = false;
@@ -44,5 +43,24 @@ TEST(ProcessInfoTest, SettingsEqualsALL){
     process2.isDllInjected = true;
     process2.isMonitored = true;
 
-    EXPECT_EQ(process1.settingsEquals(process2),true);
+    EXPECT_EQ(process1.settingsEquals(process2), true);
+}
+
+TEST(ProcessInfoTest, SettingsNotEqualsAll){
+    ProcessInfo process1(10, "C:\\whatever.exe");
+    process1.deletePermission = false;
+    process1.openPermission = false;
+    process1.writePermission = false;
+    process1.readPermission = false;
+    process1.isDllInjected = true;
+    process1.isMonitored = true;
+    ProcessInfo process2(10 ,"C:\\whatever.exe");
+    process1.deletePermission = true;
+    process1.openPermission = true;
+    process1.writePermission = true;
+    process1.readPermission = true;
+    process1.isDllInjected = false;
+    process1.isMonitored = false;
+
+    EXPECT_EQ(process1.settingsEquals(process2), false);
 }
