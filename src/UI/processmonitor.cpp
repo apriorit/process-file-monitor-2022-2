@@ -35,7 +35,8 @@ bool operator==(const ProcessInfo& first , const ProcessInfo& second){
 
 void ProcessMonitor::updateProcessesTable() {
     std::vector<ProcessInfo> updatedProcesses = processesSeeker->getSystemProcesses();
-    processesInfo = mergeProcessesLists(processesInfo, updatedProcesses);
+    std::sort(updatedProcesses.begin(),updatedProcesses.end());
+    processesInfo = mergeProcessesSortedLists(processesInfo, updatedProcesses);
 }
 
 ProcessInfo ProcessMonitor::getCopyOfProcessInfoByIndex(const size_t Index) const{
@@ -76,7 +77,7 @@ void ProcessMonitor::setProcessEditableFieldByPid(const DWORD Pid, const Process
 size_t ProcessMonitor::getProcessesCount() const{
     return processesInfo.size();
 }
-std::vector<ProcessInfo> ProcessMonitor::mergeProcessesLists(const std::vector<ProcessInfo>& oldProcesses ,
+std::vector<ProcessInfo> ProcessMonitor::mergeProcessesSortedLists(const std::vector<ProcessInfo>& oldProcesses ,
                                                                 const std::vector<ProcessInfo>& currentProcesses){
     std::vector<ProcessInfo> updatedProcesses;
     auto itOld = oldProcesses.begin();
@@ -88,7 +89,7 @@ std::vector<ProcessInfo> ProcessMonitor::mergeProcessesLists(const std::vector<P
             itOld++;
             itCurrent++;
         }
-        if (itOld->Pid > itCurrent->Pid
+        else if (itOld->Pid > itCurrent->Pid
                 || (itOld->Pid == itCurrent->Pid && itOld->Path != itCurrent->Path)){
             updatedProcesses.push_back(*itCurrent);
             itCurrent++;

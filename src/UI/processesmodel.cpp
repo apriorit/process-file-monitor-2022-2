@@ -34,10 +34,12 @@ int ProcessesModel::columnCount(const QModelIndex &parent) const
 
 QVariant ProcessesModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid())
-        return QVariant();
     const int row = index.row();
     const int col = index.column();
+
+    if (!index.isValid())
+        return QVariant();
+
     switch(role){
     case Qt::DisplayRole:
         ProcessInfo processInfo = processMonitor->getCopyOfProcessInfoByIndex(row);
@@ -60,8 +62,8 @@ void ProcessesModel::updateProcessesList(){
     qDebug() << "Start";
     processMonitor->updateProcessesTable();
     qDebug() << "get";
-    rowNumber = processMonitor->getProcessesCount();
-    qDebug() << "End";
+    rowNumber = processMonitor->getProcessesCount()-1;
+    qDebug() << "Setted row number to " << QVariant(rowNumber);
 
     emit layoutChanged();
 }

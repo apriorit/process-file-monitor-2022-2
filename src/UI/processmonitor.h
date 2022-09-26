@@ -7,10 +7,9 @@ class IProcessesSeeker;
 
 struct ProcessInfo{
     ProcessInfo(DWORD pid,const QString& Path);
-
-    const DWORD Pid;
-    const QString Path;
-    const QString Name;
+    DWORD Pid;
+    QString Path;
+    QString Name;
     bool readPermission = true;
     bool writePermission = true;
     bool openPermission = true;
@@ -56,7 +55,7 @@ public:
     void setProcessEditableFieldByPid(const DWORD Pid, const ProcessEditableFields field, const bool value) override;
     size_t getProcessesCount() const override;
 
-    static std::vector<ProcessInfo> mergeProcessesLists(const std::vector<ProcessInfo>& oldProcesses ,
+    static std::vector<ProcessInfo> mergeProcessesSortedLists(const std::vector<ProcessInfo>& oldProcesses ,
                                                     const std::vector<ProcessInfo>& currentProcesses);
     ~ProcessMonitor();
 private:
