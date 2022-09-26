@@ -37,6 +37,7 @@ void ProcessMonitor::updateProcessesTable() {
     std::vector<ProcessInfo> updatedProcesses = processesSeeker->getSystemProcesses();
     std::sort(updatedProcesses.begin(),updatedProcesses.end());
     processesInfo = mergeProcessesSortedLists(processesInfo, updatedProcesses);
+    qDebug() << "Processes size "<< QVariant(processesInfo.size()) << "updatedProcesses size" << QVariant(updatedProcesses.size());
 }
 
 ProcessInfo ProcessMonitor::getCopyOfProcessInfoByIndex(const size_t Index) const{
