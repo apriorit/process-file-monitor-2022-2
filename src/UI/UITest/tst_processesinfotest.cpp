@@ -54,13 +54,13 @@ TEST(ProcessInfoTest, SettingsNotEqualsAll){
     process1.readPermission = false;
     process1.isDllInjected = true;
     process1.isMonitored = true;
-    ProcessInfo process2(10 ,"C:\\whatever.exe");
-    process1.deletePermission = true;
-    process1.openPermission = true;
-    process1.writePermission = true;
-    process1.readPermission = true;
-    process1.isDllInjected = false;
-    process1.isMonitored = false;
+    ProcessInfo process2(10 , "C:\\whatever.exe");
+    process2.deletePermission = true;
+    process2.openPermission = true;
+    process2.writePermission = true;
+    process2.readPermission = true;
+    process2.isDllInjected = false;
+    process2.isMonitored = false;
 
     EXPECT_EQ(process1.settingsEquals(process2), false);
 }
