@@ -5,3 +5,9 @@ CONFIG -= qt
 
 SOURCES += \
         main.cpp
+
+DISTFILES += \
+    inject.cpp
+
+HEADERS += \
+    pch.h
