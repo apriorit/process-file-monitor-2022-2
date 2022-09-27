@@ -1,6 +1,6 @@
 #pragma once
-
 #include <QAbstractTableModel>
+#include <QTimer>
 
 class IProcessMonitor;
 

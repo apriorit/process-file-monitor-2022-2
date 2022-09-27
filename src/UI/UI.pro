@@ -12,6 +12,7 @@ CONFIG   += cmdline precompile_header
 PRECOMPILED_HEADER = pch.h
 
 SOURCES += \
+    logmodel.cpp \
     main.cpp \
     mainwindow.cpp \
     processesmodel.cpp \
@@ -20,6 +21,7 @@ SOURCES += \
     processmonitor.cpp
 
 HEADERS += \
+    logmodel.h \
     mainwindow.h \
     pch.h \
     processesmodel.h \
