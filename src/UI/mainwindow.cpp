@@ -15,4 +15,3 @@ void MainWindow::on_pushButton_clicked()
 {
     logModel->clearData();
 }
-

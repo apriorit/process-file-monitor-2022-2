@@ -87,4 +87,3 @@ size_t ProcessMonitor::getIndexOfProcessBySpecyficPid(const DWORD Pid) const{
     }
     throw std::invalid_argument("There is no Process with given PID !");
 }
-
