@@ -9,6 +9,7 @@
 #include <QTime>
 #include <QString>
 #include <QTimer>
+#include <QFileInfo>
 #include <memory>
 #include <windows.h>
 #include <stdio.h>

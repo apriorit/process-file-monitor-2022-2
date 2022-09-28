@@ -26,6 +26,4 @@ struct ProcessInfo{
     bool settingsEquals(const ProcessInfo& other) const;
     friend bool operator<(const ProcessInfo& first , const ProcessInfo& second);
     friend bool operator==(const ProcessInfo& first , const ProcessInfo& second);
-private:
-    QString getNameFromThePath();
 };
