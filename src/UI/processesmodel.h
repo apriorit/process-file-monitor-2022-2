@@ -21,8 +21,6 @@ public:
 public slots:
     void updateProcessesList();
 private:
-    size_t rowNumber = 0;
-    const size_t colNumber = 7;
     IProcessMonitor* processMonitor;
     QTimer* timer;
 };

@@ -1,14 +1,28 @@
 #include "pch.h"
 #include "processesmodel.h"
 #include "processmonitor.h"
-#include "processinfo.h"
+
+namespace Column{
+    enum Columns{
+        PidColumn,
+        Executable,
+        ReadPerm,
+        WritePerm,
+        DeletePerm,
+        OpenPerm,
+        IsMonitored,
+        ColumnCount
+    };
+}
 
 ProcessesModel::ProcessesModel(QObject *parent, IProcessMonitor* processMonitor)
     : QAbstractTableModel(parent),
       processMonitor{processMonitor},
       timer{new QTimer(this)}
 {
-    timer->setInterval(1000);
+    updateProcessesList();
+    const int updateIntervalInMs = 1000;
+    timer->setInterval(updateIntervalInMs);
     connect(timer, &QTimer::timeout , this, &ProcessesModel::updateProcessesList);
     timer->start();
 }
@@ -17,19 +31,19 @@ QVariant ProcessesModel::headerData(int section, Qt::Orientation orientation, in
 {
     if(role == Qt::DisplayRole && orientation == Qt::Horizontal){
         switch(section){
-        case 0:
+        case Column::PidColumn:
             return "PID";
-        case 1:
+        case Column::Executable:
             return "Executable";
-        case 2:
+        case Column::ReadPerm:
             return "Read Permission";
-        case 3:
+        case Column::WritePerm:
             return "Write Permission";
-        case 4:
+        case Column::DeletePerm:
             return "Delete Permission";
-        case 5:
+        case Column::OpenPerm:
             return "Open Permission";
-        case 6:
+        case Column::IsMonitored:
             return "Monitor Process";
         }
     }
@@ -40,14 +54,14 @@ int ProcessesModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
         return 0;
-    return rowNumber;
+    return processMonitor->getProcessesCount();;
 }
 
 int ProcessesModel::columnCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
         return 0;
-    return colNumber;
+    return Column::ColumnCount;
 }
 
 QVariant ProcessesModel::data(const QModelIndex &index, int role) const
@@ -61,34 +75,33 @@ QVariant ProcessesModel::data(const QModelIndex &index, int role) const
     switch(role){
     case Qt::DisplayRole:
             switch(col){
-            case 0:
+            case Column::PidColumn:
                 return QVariant(static_cast<unsigned long long>(processInfo.Pid));
-            case 1:
+            case Column::Executable:
                 return processInfo.Name;
-            case 2:
+            case Column::ReadPerm:
                 return "read";
-            case 3:
+            case Column::WritePerm:
                 return "write";
-            case 4:
+            case Column::DeletePerm:
                 return "open";
-            case 5:
+            case Column::OpenPerm:
                 return "delete";
-            case 6:
+            case Column::IsMonitored:
                 return "monitor";
             }
     break;
     case Qt::CheckStateRole:
-        if(col < 2 || col > 6) break;
         switch(col){
-            case 2:
+            case Column::ReadPerm:
                 return boolToCheckStatus(processInfo.readPermission);
-            case 3:
+            case Column::WritePerm:
                 return boolToCheckStatus(processInfo.writePermission);
-            case 4:
-                return boolToCheckStatus(processInfo.openPermission);
-            case 5:
+            case Column::DeletePerm:
                 return boolToCheckStatus(processInfo.deletePermission);
-            case 6:
+            case Column::OpenPerm:
+                return boolToCheckStatus(processInfo.openPermission);
+            case Column::IsMonitored:
                 return boolToCheckStatus(processInfo.isMonitored);
         }
         break;
@@ -97,12 +110,7 @@ QVariant ProcessesModel::data(const QModelIndex &index, int role) const
 }
 
 void ProcessesModel::updateProcessesList(){
-    qDebug() << "Start";
     processMonitor->updateProcessesTable();
-    qDebug() << "get";
-    rowNumber = processMonitor->getProcessesCount();
-    qDebug() << "Setted row number to " << QVariant(rowNumber);
-
     emit layoutChanged();
 }
 
@@ -113,28 +121,27 @@ bool ProcessesModel::setData(const QModelIndex &index, const QVariant &value, in
         const int row = index.row();
         const int col = index.column();
         bool checked = value.toBool();
+        std::unique_ptr<ProcessEditableFields> field;
 
-        if(col >= 2 && col <=6){
-            ProcessEditableFields field = ProcessEditableFields::readPerm;
-            switch(col){
-            case 2:
-                field = ProcessEditableFields::readPerm;
-            break;
-            case 3:
-                field = ProcessEditableFields::writePerm;
-            break;
-            case 4:
-                field = ProcessEditableFields::openPerm;
-            break;
-            case 5:
-                field = ProcessEditableFields::deletePerm;
-            break;
-            case 6:
-                field = ProcessEditableFields::isMonitored;
-            break;
-
-            }
-            processMonitor->setProcessEditableFieldByIndex(row, field, checked);
+        switch(col){
+        case Column::ReadPerm:
+            field = std::make_unique<ProcessEditableFields>(ProcessEditableFields::readPerm);
+        break;
+        case Column::WritePerm:
+            field = std::make_unique<ProcessEditableFields>(ProcessEditableFields::writePerm);
+        break;
+        case Column::OpenPerm:
+            field = std::make_unique<ProcessEditableFields>(ProcessEditableFields::openPerm);
+        break;
+        case Column::DeletePerm:
+            field = std::make_unique<ProcessEditableFields>(ProcessEditableFields::deletePerm);;
+        break;
+        case Column::IsMonitored:
+            field = std::make_unique<ProcessEditableFields>(ProcessEditableFields::isMonitored);
+        break;
+        }
+        if(field){
+            processMonitor->setProcessEditableFieldByIndex(row, *field, checked);
             return true;
         }
     }
@@ -144,7 +151,11 @@ bool ProcessesModel::setData(const QModelIndex &index, const QVariant &value, in
 Qt::ItemFlags ProcessesModel::flags(const QModelIndex &index) const{
     const int col = index.column();
     auto flag = QAbstractTableModel::flags(index);
-    if(col >= 2 && col <= 6){
+    if(col == Column::ReadPerm
+            || col == Column::WritePerm
+            || col == Column::DeletePerm
+            || col == Column::OpenPerm
+            || col == Column::IsMonitored){
         return Qt::ItemIsEnabled | Qt::ItemIsUserCheckable | flag;
     }
     return flag;
