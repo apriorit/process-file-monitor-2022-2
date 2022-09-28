@@ -17,6 +17,7 @@ SOURCES += \
     mainwindow.cpp \
     processesmodel.cpp \
     processesseeker.cpp \
+    processesstorage.cpp \
     processinfo.cpp \
     processmonitor.cpp
 
@@ -26,6 +27,7 @@ HEADERS += \
     pch.h \
     processesmodel.h \
     processesseeker.h \
+    processesstorage.h \
     processinfo.h \
     processmonitor.h
 

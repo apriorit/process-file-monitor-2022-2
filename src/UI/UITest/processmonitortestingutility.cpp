@@ -1,14 +1,17 @@
 #include "pch.h"
 #include "processmonitortestingutility.h"
 
+
 namespace pmtu{
-    bool BothProcessesListsEquals(const std::vector<ProcessInfo>& v1,
-                                  const std::vector<ProcessInfo>& v2){
-        if(v1.size() != v2.size()){
+    bool BothProcessesListsEquals( IProcessesStorage& s1,
+                               IProcessesStorage& s2){
+        if(s1.getSize() != s2.getSize()){
             return false;
         }
-        for(DWORD i = 0 ; i < v1.size() ; i++){
-            if(!(v1[i] == v2[i] && v1[i].settingsEquals(v2[i]))){
+        for(size_t i = 0 ; i < s1.getSize() ; i++){
+            const ProcessInfo& proc1 = s1.getProcessByIndex(i);
+            const ProcessInfo& proc2 = s2.getProcessByIndex(i);
+            if(!(proc1 == proc2 && proc1.settingsEquals(proc2))){
                 return false;
             }
         }

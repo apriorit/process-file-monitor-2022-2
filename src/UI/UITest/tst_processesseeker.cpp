@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "../processesseeker.h"
+#include "../processesstorage.h"
 
 using namespace testing;
 

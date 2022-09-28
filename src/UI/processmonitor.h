@@ -1,8 +1,10 @@
 #pragma once
 #include <QString>
-#include <vector>
 #include <windows.h>
+#include "processesstorage.h"
 #include "processinfo.h"
+
+class IProcessesStorage;
 
 class IProcessesSeeker;
 
@@ -19,20 +21,16 @@ public:
 
 class ProcessMonitor : public IProcessMonitor{
 public:
-    ProcessMonitor(IProcessesSeeker* processesSeeker)
-        :processesSeeker{processesSeeker}{};
+    ProcessMonitor(IProcessesSeeker* processesSeeker);
     void updateProcessesTable() override;
     ProcessInfo getCopyOfProcessInfoByIndex(const size_t index) const override;
     ProcessInfo getCopyOfProcessInfoByPid(const DWORD Pid) const override;
     void setProcessEditableFieldByIndex(const size_t Index, const ProcessEditableFields field, const bool value) override;
     void setProcessEditableFieldByPid(const DWORD Pid, const ProcessEditableFields field, const bool value) override;
     size_t getProcessesCount() const override;
-
-    static std::vector<ProcessInfo> mergeProcessesSortedLists(const std::vector<ProcessInfo>& oldProcesses ,
-                                                    const std::vector<ProcessInfo>& currentProcesses);
     ~ProcessMonitor();
 private:
-    size_t getIndexOfProcessBySpecyficPid(const DWORD Pid) const;
-    std::vector<ProcessInfo> processesInfo;
+    std::unique_ptr<IProcessesStorage> processesStorage;
     IProcessesSeeker* processesSeeker;
+    void setProcessEditableField(ProcessInfo& process, const ProcessEditableFields field, const bool value);
 };

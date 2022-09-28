@@ -2,17 +2,19 @@
 #include "processinfo.h"
 #include <windows.h>
 
+class ProcessesStorage;
+
 struct ProcessInfo;
 
 class IProcessesSeeker{
 public:
-    virtual std::vector<ProcessInfo> getSystemProcesses() = 0;
+    virtual ProcessesStorage getSystemProcesses() = 0;
 };
 
 class ProcessesSeeker : public IProcessesSeeker
 {
 public:
-    std::vector<ProcessInfo> getSystemProcesses() override;
+    ProcessesStorage getSystemProcesses() override;
     ProcessesSeeker();
 private:
     ProcessInfo ProcessFromPid(const DWORD Pid);
