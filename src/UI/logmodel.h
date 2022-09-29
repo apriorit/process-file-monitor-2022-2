@@ -1,22 +1,46 @@
 #pragma once
 
-#include <QAbstractListModel>
-#include <vector>
+#include <QAbstractTableModel>
 
-class LogModel : public QAbstractListModel
+struct LogInfo{
+    QString filePath;
+    QString operationType;
+    DWORD pid;
+    DWORD numberOfBytes;
+    DWORD offset;
+    QString preview;
+    QString fileHandle;
+    QString operationTime;
+    QString resultOfTheOperation;
+};
+
+namespace Columns{
+    enum Column{
+        FilePath,
+        OperationType,
+        Pid,
+        NumberOfBytes,
+        Offset,
+        Preview,
+        FileHandle,
+        OperationTime,
+        ResultOfTheOperation,
+        ColumnCount
+    };
+}
+
+class LogModel : public QAbstractTableModel
 {
     Q_OBJECT
 
 public:
     explicit LogModel(QObject *parent = nullptr);
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-    bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
-    bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
-    void clearData();
-    void test();
+
 private:
-    size_t logsLimit = 20;
-    std::vector<QString> logs;
-    QTimer* timer;
+    std::vector<LogInfo> logs;
 };

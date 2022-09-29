@@ -26,7 +26,11 @@
      </widget>
     </item>
     <item>
-     <widget class="QListView" name="LogView"/>
+     <widget class="QTableView" name="LogView">
+      <attribute name="horizontalHeaderStretchLastSection">
+       <bool>true</bool>
+      </attribute>
+     </widget>
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
