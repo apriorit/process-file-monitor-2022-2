@@ -13,5 +13,5 @@ MainWindow::MainWindow(QWidget *parent,ProcessesModel  *processesModel, LogModel
 
 void MainWindow::on_pushButton_clicked()
 {
-    //logModel->clearData();
+    logModel->clearLogs();
 }

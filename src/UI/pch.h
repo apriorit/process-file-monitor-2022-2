@@ -16,6 +16,7 @@
 #include <tchar.h>
 #include <psapi.h>
 #include <vector>
+#include <map>
 #include <string>
 #include <algorithm>
 

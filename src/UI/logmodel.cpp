@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "logmodel.h"
 
 LogModel::LogModel(QObject *parent)
@@ -78,4 +79,10 @@ QVariant LogModel::data(const QModelIndex &index, int role) const
         }
     }
     return QVariant();
+}
+
+void LogModel::clearLogs(){
+    emit beginResetModel();
+    logs.clear();
+    emit endResetModel();
 }

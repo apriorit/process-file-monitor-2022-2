@@ -22,7 +22,7 @@ void ProcessesStorage::add(const ProcessInfo&& processInfo){
 void ProcessesStorage::add(const ProcessInfo& processInfo){
     const DWORD Pid = processInfo.Pid;
     if(processes.find(Pid) != processes.end()){
-        throw std::invalid_argument("Process with given PID already exist in storage !");
+        throw std::invalid_argument("Process with given PID already exist into the storage !");
     }
     processes.emplace(std::make_pair(Pid,processInfo));
 }
