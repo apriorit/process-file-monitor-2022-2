@@ -1,23 +1,22 @@
-#ifndef PROCESSESSEEKER_H
-#define PROCESSESSEEKER_H
-#include "processmonitor.h"
+#pragma once
+#include "processinfo.h"
 #include <windows.h>
+
+class ProcessesStorage;
 
 struct ProcessInfo;
 
 class IProcessesSeeker{
 public:
-    virtual std::vector<ProcessInfo> getSystemProcesses() = 0;
+    virtual ProcessesStorage getSystemProcesses() = 0;
 };
 
-class ProcessesSeeker : IProcessesSeeker
+class ProcessesSeeker : public IProcessesSeeker
 {
 public:
-    std::vector<ProcessInfo> getSystemProcesses() override;
+    ProcessesStorage getSystemProcesses() override;
     ProcessesSeeker();
 private:
     ProcessInfo ProcessFromPid(const DWORD Pid);
     std::vector<DWORD> getProcessesPids();
 };
-
-#endif // PROCESSESSEEKER_H

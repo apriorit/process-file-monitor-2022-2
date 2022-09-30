@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "processesseeker.h"
-#include "processmonitor.h"
+#include "processinfo.h"
+#include "processesstorage.h"
 
 ProcessesSeeker::ProcessesSeeker(){}
 
@@ -41,16 +42,15 @@ std::vector<DWORD> ProcessesSeeker::getProcessesPids(){
     return processesPids;
 }
 
-std::vector<ProcessInfo> ProcessesSeeker::getSystemProcesses(){  
+ProcessesStorage ProcessesSeeker::getSystemProcesses(){
     const auto processesPids = getProcessesPids();
-    std::vector<ProcessInfo> currentRunningProcesses;
-    currentRunningProcesses.reserve(processesPids.size());
+    ProcessesStorage currentRunningProcesses;
 
     for(const auto Pid : processesPids){
         if(Pid == 0)
             continue;
         try{
-            currentRunningProcesses.push_back(ProcessFromPid(Pid));
+            currentRunningProcesses.add(ProcessFromPid(Pid));
         }
         catch(const std::invalid_argument&){
             continue;

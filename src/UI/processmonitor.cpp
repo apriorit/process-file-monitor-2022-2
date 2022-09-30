@@ -1,85 +1,62 @@
 #include "pch.h"
 #include "processmonitor.h"
 #include "processesseeker.h"
+#include "processesstorage.h"
 
-ProcessInfo::ProcessInfo(int pid,const QString& Path):Pid{pid},
-    Path{Path},
-    Name{getNameFromThePath()}{}
-
-QString ProcessInfo::getNameFromThePath(){
-    std::string stdPath = Path.toStdString();
-    std::size_t lastSeparator = stdPath.find_last_of("/\\");
-    std::string name = stdPath.substr(lastSeparator+1);
-    return QString::fromStdString(name);
-}
-
-bool ProcessInfo::settingsEquals(const ProcessInfo& other) const{
-    return readPermission == other.readPermission
-            && writePermission == other.writePermission
-            && openPermission == other.openPermission
-            && deletePermission == other.deletePermission
-            && isMonitored == other.isMonitored
-            && isDllInjected == other.isDllInjected;
-}
-
-bool operator<(const ProcessInfo& first , const ProcessInfo& second){
-    return first.Pid < second.Pid;
-}
-
-bool operator==(const ProcessInfo& first , const ProcessInfo& second){
-    return first.Pid == second.Pid
-            && first.Path == second.Path
-            && first.Name == second.Name;
-}
+ProcessMonitor::ProcessMonitor(IProcessesSeeker* processesSeeker)
+               :processesStorage{std::make_unique<ProcessesStorage>()},
+               processesSeeker{processesSeeker}{};
 
 void ProcessMonitor::updateProcessesTable() {
-    processesSeeker->getSystemProcesses();
+    auto update = processesSeeker->getSystemProcesses();
+    processesStorage->update(update);
 }
 
-ProcessInfo ProcessMonitor::getCopyOfProcessInfoByIndex(const int index){
-    return ProcessInfo(index,"test");
+ProcessInfo ProcessMonitor::getCopyOfProcessInfoByIndex(const size_t Index) const{
+    return processesStorage->getProcessByIndex(Index);
 }
 
-ProcessInfo ProcessMonitor::getCopyOfProcessInfoByPid(const int Pid){
-    return ProcessInfo(Pid,"test");
+ProcessInfo ProcessMonitor::getCopyOfProcessInfoByPid(const DWORD Pid) const{
+    return processesStorage->getProcessByPid(Pid);
 }
 
-std::vector<ProcessInfo> ProcessMonitor::mergeProcessesLists(const std::vector<ProcessInfo>& oldProcesses ,
-                                                                const std::vector<ProcessInfo>& currentProcesses){
-    std::vector<ProcessInfo> updatedProcesses;
-    auto itOld = oldProcesses.begin();
-    auto itCurrent = currentProcesses.begin();
-
-    while(itOld != oldProcesses.end() && itCurrent != currentProcesses.end()){
-        if(*itOld == *itCurrent){
-            updatedProcesses.push_back(*itOld);
-            itOld++;
-            itCurrent++;
-        }
-        if (itOld->Pid > itCurrent->Pid
-                || (itOld->Pid == itCurrent->Pid && itOld->Path != itCurrent->Path)){
-            updatedProcesses.push_back(*itCurrent);
-            itCurrent++;
-        }
-        else{
-            itOld++;
-        }
+void ProcessMonitor::setProcessEditableField(ProcessInfo& process, const ProcessEditableFields field, const bool value){
+    switch(field){
+    case ProcessEditableFields::readPerm:
+        process.readPermission = value;
+    break;
+    case ProcessEditableFields::writePerm:
+        process.writePermission = value;
+    break;
+    case ProcessEditableFields::openPerm:
+        process.openPermission = value;
+    break;
+    case ProcessEditableFields::deletePerm:
+        process.deletePermission = value;
+    break;
+    case ProcessEditableFields::isMonitored:
+        process.isMonitored = value;
+    break;
+    case ProcessEditableFields::isDllInjected:
+        process.isDllInjected = value;
+    break;
     }
-
-    while(itCurrent != currentProcesses.end()){
-        updatedProcesses.push_back(*itCurrent);
-        itCurrent++;
-    }
-
-    return updatedProcesses;
+    //TODO Send update to the hook if dll is not injected, inject it
 }
 
-void ProcessMonitor::setProcessEditableField(const ProcessEditableFields field){
-
+void ProcessMonitor::setProcessEditableFieldByIndex(const size_t Index, const ProcessEditableFields field, const bool value){
+    auto& process = processesStorage->getProcessByIndex(Index);
+    setProcessEditableField(process, field , value);
 }
 
-ProcessMonitor::~ProcessMonitor(){
-
+void ProcessMonitor::setProcessEditableFieldByPid(const DWORD Pid, const ProcessEditableFields field, const bool value){
+    auto& process = processesStorage->getProcessByPid(Pid);
+    setProcessEditableField(process, field , value);
 }
 
+size_t ProcessMonitor::getProcessesCount() const{
+    return processesStorage->getSize();
+}
+
+ProcessMonitor::~ProcessMonitor(){}
 

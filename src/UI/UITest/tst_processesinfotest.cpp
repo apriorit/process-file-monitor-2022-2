@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "../processmonitor.h"
+#include "../processinfo.h"
 
 using namespace testing;
 
@@ -35,7 +35,6 @@ TEST(ProcessInfoTest, SettingsEqualsALL){
     process1.readPermission = false;
     process1.isDllInjected = true;
     process1.isMonitored = true;
-
     ProcessInfo process2(10,"C:\\GAMES\\MGRR.exe");
     process2.deletePermission = false;
     process2.openPermission = false;
@@ -44,5 +43,24 @@ TEST(ProcessInfoTest, SettingsEqualsALL){
     process2.isDllInjected = true;
     process2.isMonitored = true;
 
-    EXPECT_EQ(process1.settingsEquals(process2),true);
+    EXPECT_EQ(process1.settingsEquals(process2), true);
+}
+
+TEST(ProcessInfoTest, SettingsNotEqualsAll){
+    ProcessInfo process1(10, "C:\\whatever.exe");
+    process1.deletePermission = false;
+    process1.openPermission = false;
+    process1.writePermission = false;
+    process1.readPermission = false;
+    process1.isDllInjected = true;
+    process1.isMonitored = true;
+    ProcessInfo process2(10 , "C:\\whatever.exe");
+    process2.deletePermission = true;
+    process2.openPermission = true;
+    process2.writePermission = true;
+    process2.readPermission = true;
+    process2.isDllInjected = false;
+    process2.isMonitored = false;
+
+    EXPECT_EQ(process1.settingsEquals(process2), false);
 }

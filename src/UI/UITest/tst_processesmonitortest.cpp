@@ -1,128 +1,82 @@
 #include "pch.h"
 #include "../processmonitor.h"
 #include "../processesseeker.h"
-
+#include "processmonitortestingutility.h"
 using namespace testing;
 
-class ProcessesSeekerMock : public IProcessesSeeker{
-public:
-    MOCK_METHOD(std::vector<ProcessInfo>, getSystemProcesses ,() , (override) );
+class ProcessMonitorTest : public ::testing::Test{
+protected:
+    ProcessMonitorTest()
+        :firstUpdate{{1,"FirstProcess"},{2,"SecondProcess"},{3,"ThirdProcess"}},
+        secondUpdate{{1,"FirstDiffrentProcess"},{3,"ThirdProcess"},{4,"ForthProcess"}},
+        processesSeeker{}{}
+    ProcessesStorage firstUpdate;
+    ProcessesStorage secondUpdate;
+    ProcessesStorage sutStorage;
+    pmtu::ProcessesSeekerMock processesSeeker;
 };
 
-bool BothProcessesListsEquals(const std::vector<ProcessInfo>& v1,
-                              const std::vector<ProcessInfo>& v2){
-    if(v1.size() != v2.size()){
-        return false;
-    }
-    for(DWORD i = 0 ; i < v1.size() ; i++){
-        if(!(v1[i] == v2[i] && v1[i].settingsEquals(v2[i]))){
-            return false;
-        }
-    }
-    return true;
-}
-
-TEST(ProcessMonitorTest, BothProcessesListEquals){
-    ProcessInfo p1(1,"proc1");
-    p1.isDllInjected = true;
-    ProcessInfo p2(2,"proc1");
-    std::vector<ProcessInfo> v1{p1,p2};
-    std::vector<ProcessInfo> v2{p1,p2};
-
-    EXPECT_EQ(BothProcessesListsEquals(v1,v2), true);
-}
-
-TEST(ProcessMonitorTest, BothProcessesListNotEqualsDueToPermissions){
-    ProcessInfo p1(1,"proc1");
-    ProcessInfo p2(2,"proc1");
-    std::vector<ProcessInfo> v1{p1,p2};
-    std::vector<ProcessInfo> v2{p1,p2};
-    v1[0].deletePermission = false;
-
-    EXPECT_EQ(BothProcessesListsEquals(v1,v2), false);
-}
-
-TEST(ProcessMonitorTest, BothProcessesListNotEqualsDueToProcesses){
-    ProcessInfo p1(1,"proc1");
-    ProcessInfo p2(2,"proc1");
-    ProcessInfo p3(3,"proc3");
-    std::vector<ProcessInfo> v1{p1,p2};
-    std::vector<ProcessInfo> v2{p1,p3};
-
-    EXPECT_EQ(BothProcessesListsEquals(v1,v2), false);
-}
-
-TEST(ProcessMonitorTest, BothProcessesListNotEqualsDueToDiffrentName){
-    ProcessInfo p1(1,"proc1");
-    ProcessInfo p2(2,"proc1");
-    ProcessInfo p3(1,"proc2");
-    std::vector<ProcessInfo> v1{p1,p2};
-    std::vector<ProcessInfo> v2{p3,p2};
-
-    EXPECT_EQ(BothProcessesListsEquals(v1,v2), false);
-}
-
-
-TEST(ProcessMonitorTest, processesSeekerWillBeCalledOnce){
-    ProcessesSeekerMock processesSeeker;
+TEST_F(ProcessMonitorTest, IProcessesSeekerReturnsElementsInRandomOrder){
     ProcessMonitor sut(&processesSeeker);
-
+    ProcessesStorage notSortedUpdate({{4, "ForthProcess"}, {2, "SecondProcess"}, {1, "FirstProcess"}});
+    ProcessesStorage expected({{1,"FirstProcess"},{2,"SecondProcess"},{4,"ForthProcess"}});
     EXPECT_CALL(processesSeeker, getSystemProcesses)
-            .WillOnce(Return(std::vector<ProcessInfo>()));
+            .WillOnce(Return(firstUpdate))
+            .WillOnce(Return(notSortedUpdate));
 
     sut.updateProcessesTable();
+    sut.updateProcessesTable();
+
+    ASSERT_EQ(sut.getProcessesCount(), expected.getSize());
+    for(size_t i = 0; i < sut.getProcessesCount() ; i++){
+        EXPECT_EQ(sut.getCopyOfProcessInfoByIndex(i), expected.getProcessByIndex(i));
+    }
 }
 
-TEST(ProcessMonitorTest, mergeProcessesBothEquals){
-    std::vector<ProcessInfo> processes({{1,"p1"},{2,"p2"}});
-    std::vector<ProcessInfo> update({{1,"p1"},{2,"p2"}});
-    std::vector<ProcessInfo> expected({{1,"p1"},{2,"p2"}});
-    std::vector<ProcessInfo> result = ProcessMonitor::mergeProcessesLists(processes, update);
+TEST_F(ProcessMonitorTest, getProcessByIndex){
+    ProcessMonitor sut(&processesSeeker);
+    auto expected = firstUpdate.getProcessByIndex(0);
+    EXPECT_CALL(processesSeeker, getSystemProcesses)
+            .WillOnce(Return(firstUpdate));
 
-    EXPECT_EQ(result == expected , true);
+    sut.updateProcessesTable();
+    auto result = sut.getCopyOfProcessInfoByIndex(0);
+
+    EXPECT_EQ(expected,result);
 }
 
-TEST(ProcessMonitorTest, mergeProcessesBothEqualsSaveOldSettings){
-    ProcessInfo processInfo(10,"C:\\Berserk.exe");
-    processInfo.deletePermission = false;
-    processInfo.readPermission = false;
-    processInfo.isDllInjected = true;
+TEST_F(ProcessMonitorTest, getAndchangeProcessSettingByPid){
+    ProcessMonitor sut(&processesSeeker);
+    auto expected = firstUpdate.getProcessByIndex(0);
+    expected.isDllInjected = true;
+    EXPECT_CALL(processesSeeker, getSystemProcesses)
+            .WillOnce(Return(firstUpdate));
 
-    std::vector<ProcessInfo> processes({processInfo,{2,"p2"}});
-    std::vector<ProcessInfo> update({{10,"C:\\Berserk.exe"},{2,"p2"}});
+    sut.updateProcessesTable();
+    sut.setProcessEditableFieldByPid(1, ProcessEditableFields::isDllInjected, true);
 
-    std::vector<ProcessInfo> expected({processInfo,{2,"p2"}});
-    std::vector<ProcessInfo> result = ProcessMonitor::mergeProcessesLists(processes, update);
-
-    EXPECT_EQ(BothProcessesListsEquals(result,expected), true);
+    EXPECT_EQ(expected.settingsEquals(sut.getCopyOfProcessInfoByPid(1)), true);
 }
 
-TEST(ProcessMonitorTest, mergeProcessesNewProcessesBorned){
-    std::vector<ProcessInfo> processes({{1,"p1"},{2,"p2"}});
-    std::vector<ProcessInfo> update({{1,"p1"},{2,"p2"},{3,"p3"},{4,"p4"}});
+TEST_F(ProcessMonitorTest, getAndchangeProcessSettingByIndex){
+    ProcessMonitor sut(&processesSeeker);
+    auto expected = firstUpdate.getProcessByIndex(0);
+    expected.openPermission = false;
+    EXPECT_CALL(processesSeeker, getSystemProcesses)
+            .WillOnce(Return(firstUpdate));
 
-    std::vector<ProcessInfo> expected({{1,"p1"},{2,"p2"},{3,"p3"},{4,"p4"}});
-    std::vector<ProcessInfo> result = ProcessMonitor::mergeProcessesLists(processes, update);
+    sut.updateProcessesTable();
+    sut.setProcessEditableFieldByIndex(0, ProcessEditableFields::openPerm, false);
 
-    EXPECT_EQ(result, expected);
+    EXPECT_EQ(expected.settingsEquals(sut.getCopyOfProcessInfoByIndex(0)), true);
 }
 
-TEST(ProcessMonitorTest, mergeProcessesNewProcessUnderTheSamePid){
-    std::vector<ProcessInfo> processes({{1,"p1"},{2,"p2"}});
-    std::vector<ProcessInfo> update({{1,"p1"},{2,"p22"}});
+TEST_F(ProcessMonitorTest, UpdateProcessesAndCheckCountOfThem){
+    ProcessMonitor sut(&processesSeeker);
+    EXPECT_CALL(processesSeeker, getSystemProcesses)
+            .WillOnce(Return(firstUpdate));
 
-    std::vector<ProcessInfo> expected({{1,"p1"},{2,"p22"}});
-    std::vector<ProcessInfo> result = ProcessMonitor::mergeProcessesLists(processes, update);
+    sut.updateProcessesTable();
 
-    EXPECT_EQ(result, expected);
-}
-
-TEST(ProcessMonitorTest, mergeProcessesOldProcessesTerminated){
-    std::vector<ProcessInfo> processes({{1,"p1"},{2,"p2"},{3,"p3"},{4,"p4"}});
-    std::vector<ProcessInfo> update({{1,"p1"},{2,"p2"}});
-
-    std::vector<ProcessInfo> expected({{1,"p1"},{2,"p2"}});
-    std::vector<ProcessInfo> result = ProcessMonitor::mergeProcessesLists(processes, update);
-
-    EXPECT_EQ(result, expected);
+    EXPECT_EQ(sut.getProcessesCount(), secondUpdate.getSize());
 }
