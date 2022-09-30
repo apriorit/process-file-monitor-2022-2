@@ -11,7 +11,7 @@ ProcessesStorage::ProcessesStorage(std::initializer_list<ProcessInfo> list){
 
 ProcessesStorage::~ProcessesStorage(){}
 
-void ProcessesStorage::add(const ProcessInfo&& processInfo){
+void ProcessesStorage::add(ProcessInfo&& processInfo){
     const DWORD Pid = processInfo.Pid;
     if(processes.find(Pid) != processes.end()){
         throw std::invalid_argument("Process with given PID already exist in storage !");
@@ -53,7 +53,7 @@ ProcessInfo& ProcessesStorage::getProcessByPid(const DWORD Pid){
     return processes.at(Pid);
 }
 
-void ProcessesStorage::update(IProcessesStorage& other){
+void ProcessesStorage::update(ProcessesStorage& other){
     size_t myIndex = 0;
     size_t otherIndex = 0;
 

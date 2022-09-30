@@ -3,8 +3,8 @@
 #include "../processesstorage.h"
 
 namespace pmtu{
-bool BothProcessesListsEquals(IProcessesStorage& s1,
-                              IProcessesStorage& s2);
+bool BothProcessesListsEquals(ProcessesStorage& s1,
+                              ProcessesStorage& s2);
 
 class ProcessesSeekerMock : public IProcessesSeeker{
 public:

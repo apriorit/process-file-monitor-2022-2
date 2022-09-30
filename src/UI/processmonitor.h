@@ -4,7 +4,7 @@
 #include "processesstorage.h"
 #include "processinfo.h"
 
-class IProcessesStorage;
+class ProcessesStorage;
 
 class IProcessesSeeker;
 
@@ -30,7 +30,7 @@ public:
     size_t getProcessesCount() const override;
     ~ProcessMonitor();
 private:
-    std::unique_ptr<IProcessesStorage> processesStorage;
+    std::unique_ptr<ProcessesStorage> processesStorage;
     IProcessesSeeker* processesSeeker;
     void setProcessEditableField(ProcessInfo& process, const ProcessEditableFields field, const bool value);
 };

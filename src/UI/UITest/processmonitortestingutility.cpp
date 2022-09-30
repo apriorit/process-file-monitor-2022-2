@@ -1,10 +1,9 @@
 #include "pch.h"
 #include "processmonitortestingutility.h"
 
-
 namespace pmtu{
-    bool BothProcessesListsEquals( IProcessesStorage& s1,
-                               IProcessesStorage& s2){
+    bool BothProcessesListsEquals( ProcessesStorage& s1,
+                               ProcessesStorage& s2){
         if(s1.getSize() != s2.getSize()){
             return false;
         }
