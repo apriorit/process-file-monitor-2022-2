@@ -41,6 +41,7 @@ void ProcessMonitor::setProcessEditableField(ProcessInfo& process, const Process
         process.isDllInjected = value;
     break;
     }
+    //TODO Send update to the hook if dll is not injected, inject it
 }
 
 void ProcessMonitor::setProcessEditableFieldByIndex(const size_t Index, const ProcessEditableFields field, const bool value){
