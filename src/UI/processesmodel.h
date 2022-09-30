@@ -4,6 +4,17 @@
 
 class IProcessMonitor;
 
+enum ProcessTableColumn{
+    PidColumn,
+    Executable,
+    ReadPerm,
+    WritePerm,
+    DeletePerm,
+    OpenPerm,
+    IsMonitored,
+    ColumnCount
+};
+
 class ProcessesModel : public QAbstractTableModel
 {
     Q_OBJECT

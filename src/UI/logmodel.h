@@ -14,20 +14,18 @@ struct LogInfo{
     QString resultOfTheOperation;
 };
 
-namespace Columns{
-    enum Column{
-        FilePath,
-        OperationType,
-        Pid,
-        NumberOfBytes,
-        Offset,
-        Preview,
-        FileHandle,
-        OperationTime,
-        ResultOfTheOperation,
-        ColumnCount
-    };
-}
+enum class LogTableColumn{
+    FileHandle,
+    FilePath,
+    OperationType,
+    Pid,
+    NumberOfBytes,
+    Offset,
+    Preview,
+    OperationTime,
+    ResultOfTheOperation,
+    ColumnCount
+};
 
 class LogModel : public QAbstractTableModel
 {

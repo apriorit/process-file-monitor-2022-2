@@ -11,25 +11,27 @@ LogModel::LogModel(QObject *parent)
 QVariant LogModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if(role == Qt::DisplayRole && orientation == Qt::Horizontal){
-        switch(section){
-        case Columns::FilePath:
+        switch(static_cast<LogTableColumn>(section)){
+        case LogTableColumn::FilePath:
             return "File Path";
-        case Columns::OperationType:
+        case LogTableColumn::OperationType:
             return "Operation Type";
-        case Columns::Pid:
+        case LogTableColumn::Pid:
             return "PID";
-        case Columns::NumberOfBytes:
+        case LogTableColumn::NumberOfBytes:
             return "Number Of Bytes";
-        case Columns::Offset:
+        case LogTableColumn::Offset:
             return "Offset";
-        case Columns::Preview:
+        case LogTableColumn::Preview:
             return "Preview";
-        case Columns::FileHandle:
+        case LogTableColumn::FileHandle:
             return "File Handle";
-        case Columns::OperationTime:
+        case LogTableColumn::OperationTime:
             return "Operation Time";
-        case Columns::ResultOfTheOperation:
+        case LogTableColumn::ResultOfTheOperation:
             return "Result Of The Operation";
+        default:
+            return QVariant();
         }
     }
     return QVariant();
@@ -46,7 +48,7 @@ int LogModel::columnCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
         return 0;
-    return Columns::ColumnCount;
+    return static_cast<int>(LogTableColumn::ColumnCount);
 }
 
 QVariant LogModel::data(const QModelIndex &index, int role) const
@@ -57,25 +59,27 @@ QVariant LogModel::data(const QModelIndex &index, int role) const
     int col = index.column();
     auto& log = logs[row];
     if(role == Qt::DisplayRole){
-        switch(col){
-        case Columns::FilePath:
+        switch(static_cast<LogTableColumn>(col)){
+        case LogTableColumn::FilePath:
             return log.filePath;
-        case Columns::OperationType:
+        case LogTableColumn::OperationType:
             return log.operationType;
-        case Columns::Pid:
+        case LogTableColumn::Pid:
             return QVariant::fromValue(log.pid);
-        case Columns::NumberOfBytes:
+        case LogTableColumn::NumberOfBytes:
             return QVariant::fromValue(log.numberOfBytes);
-        case Columns::Offset:
+        case LogTableColumn::Offset:
             return QVariant::fromValue(log.offset);
-        case Columns::Preview:
+        case LogTableColumn::Preview:
             return log.preview;
-        case Columns::FileHandle:
+        case LogTableColumn::FileHandle:
             return log.fileHandle;
-        case Columns::OperationTime:
+        case LogTableColumn::OperationTime:
             return log.operationTime;
-        case Columns::ResultOfTheOperation:
+        case LogTableColumn::ResultOfTheOperation:
             return log.resultOfTheOperation;
+        default:
+            return QVariant();
         }
     }
     return QVariant();

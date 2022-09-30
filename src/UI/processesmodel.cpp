@@ -2,19 +2,6 @@
 #include "processesmodel.h"
 #include "processmonitor.h"
 
-namespace Column{
-    enum Columns{
-        PidColumn,
-        Executable,
-        ReadPerm,
-        WritePerm,
-        DeletePerm,
-        OpenPerm,
-        IsMonitored,
-        ColumnCount
-    };
-}
-
 ProcessesModel::ProcessesModel(QObject *parent, IProcessMonitor* processMonitor)
     : QAbstractTableModel(parent),
       processMonitor{processMonitor},
@@ -29,22 +16,26 @@ ProcessesModel::ProcessesModel(QObject *parent, IProcessMonitor* processMonitor)
 
 QVariant ProcessesModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
+    const ProcessTableColumn column = static_cast<ProcessTableColumn>(section);
+
     if(role == Qt::DisplayRole && orientation == Qt::Horizontal){
-        switch(section){
-        case Column::PidColumn:
+        switch(column){
+        case ProcessTableColumn::PidColumn:
             return "PID";
-        case Column::Executable:
+        case ProcessTableColumn::Executable:
             return "Executable";
-        case Column::ReadPerm:
+        case ProcessTableColumn::ReadPerm:
             return "Read Permission";
-        case Column::WritePerm:
+        case ProcessTableColumn::WritePerm:
             return "Write Permission";
-        case Column::DeletePerm:
+        case ProcessTableColumn::DeletePerm:
             return "Delete Permission";
-        case Column::OpenPerm:
+        case ProcessTableColumn::OpenPerm:
             return "Open Permission";
-        case Column::IsMonitored:
+        case ProcessTableColumn::IsMonitored:
             return "Monitor Process";
+        default:
+            break;
         }
     }
     return QVariant();
@@ -61,48 +52,53 @@ int ProcessesModel::columnCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
         return 0;
-    return Column::ColumnCount;
+    return static_cast<int>(ProcessTableColumn::ColumnCount);
 }
 
 QVariant ProcessesModel::data(const QModelIndex &index, int role) const
 {
-    const int row = index.row();
-    const int col = index.column();
-
     if (!index.isValid())
         return QVariant();
+
+    const int row = index.row();
+    const ProcessTableColumn column = static_cast<ProcessTableColumn>(index.column());
     ProcessInfo processInfo = processMonitor->getCopyOfProcessInfoByIndex(row);
+
     switch(role){
     case Qt::DisplayRole:
-            switch(col){
-            case Column::PidColumn:
+            switch(column){
+            case ProcessTableColumn::PidColumn:
                 return QVariant(static_cast<unsigned long long>(processInfo.Pid));
-            case Column::Executable:
+            case ProcessTableColumn::Executable:
                 return processInfo.Name;
-            case Column::ReadPerm:
+            case ProcessTableColumn::ReadPerm:
                 return "read";
-            case Column::WritePerm:
+            case ProcessTableColumn::WritePerm:
                 return "write";
-            case Column::DeletePerm:
+            case ProcessTableColumn::DeletePerm:
                 return "open";
-            case Column::OpenPerm:
+            case ProcessTableColumn::OpenPerm:
                 return "delete";
-            case Column::IsMonitored:
+            case ProcessTableColumn::IsMonitored:
                 return "monitor";
+            default:
+                break;
             }
     break;
     case Qt::CheckStateRole:
-        switch(col){
-            case Column::ReadPerm:
+        switch(static_cast<ProcessTableColumn>(column)){
+            case ProcessTableColumn::ReadPerm:
                 return boolToCheckStatus(processInfo.readPermission);
-            case Column::WritePerm:
+            case ProcessTableColumn::WritePerm:
                 return boolToCheckStatus(processInfo.writePermission);
-            case Column::DeletePerm:
+            case ProcessTableColumn::DeletePerm:
                 return boolToCheckStatus(processInfo.deletePermission);
-            case Column::OpenPerm:
+            case ProcessTableColumn::OpenPerm:
                 return boolToCheckStatus(processInfo.openPermission);
-            case Column::IsMonitored:
+            case ProcessTableColumn::IsMonitored:
                 return boolToCheckStatus(processInfo.isMonitored);
+            default:
+                break;
         }
         break;
     }
@@ -118,27 +114,30 @@ bool ProcessesModel::setData(const QModelIndex &index, const QVariant &value, in
     if(role == Qt::CheckStateRole){
         if(!checkIndex(index))
             return false;
+
         const int row = index.row();
-        const int col = index.column();
+        const ProcessTableColumn column = static_cast<ProcessTableColumn>(index.column());
         bool checked = value.toBool();
         std::unique_ptr<ProcessEditableFields> field;
 
-        switch(col){
-        case Column::ReadPerm:
+        switch(column){
+        case ProcessTableColumn::ReadPerm:
             field = std::make_unique<ProcessEditableFields>(ProcessEditableFields::readPerm);
         break;
-        case Column::WritePerm:
+        case ProcessTableColumn::WritePerm:
             field = std::make_unique<ProcessEditableFields>(ProcessEditableFields::writePerm);
         break;
-        case Column::OpenPerm:
+        case ProcessTableColumn::OpenPerm:
             field = std::make_unique<ProcessEditableFields>(ProcessEditableFields::openPerm);
         break;
-        case Column::DeletePerm:
+        case ProcessTableColumn::DeletePerm:
             field = std::make_unique<ProcessEditableFields>(ProcessEditableFields::deletePerm);;
         break;
-        case Column::IsMonitored:
+        case ProcessTableColumn::IsMonitored:
             field = std::make_unique<ProcessEditableFields>(ProcessEditableFields::isMonitored);
         break;
+        default:
+            break;
         }
         if(field){
             processMonitor->setProcessEditableFieldByIndex(row, *field, checked);
@@ -149,13 +148,13 @@ bool ProcessesModel::setData(const QModelIndex &index, const QVariant &value, in
 }
 
 Qt::ItemFlags ProcessesModel::flags(const QModelIndex &index) const{
-    const int col = index.column();
+    const ProcessTableColumn column = static_cast<ProcessTableColumn>(index.column());
     auto flag = QAbstractTableModel::flags(index);
-    if(col == Column::ReadPerm
-            || col == Column::WritePerm
-            || col == Column::DeletePerm
-            || col == Column::OpenPerm
-            || col == Column::IsMonitored){
+    if(column == ProcessTableColumn::ReadPerm
+            || column == ProcessTableColumn::WritePerm
+            || column == ProcessTableColumn::DeletePerm
+            || column == ProcessTableColumn::OpenPerm
+            || column == ProcessTableColumn::IsMonitored){
         return Qt::ItemIsEnabled | Qt::ItemIsUserCheckable | flag;
     }
     return flag;
