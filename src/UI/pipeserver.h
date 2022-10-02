@@ -2,7 +2,9 @@
 
 #include <windows.h>
 #include <QDebug>
-#include <iostream>
+
+class ProcessMonitor;
+class LogModel;
 
 enum class Commands{
     Unknown,
@@ -36,4 +38,6 @@ private:
     const DWORD TimeOut = 0;
     HANDLE pipeHandle;
 
+    ProcessMonitor* processMonitor;
+    LogModel* logModel;
 };

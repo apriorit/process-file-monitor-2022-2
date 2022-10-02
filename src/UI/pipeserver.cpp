@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "pipeserver.h"
+#include "processmonitor.h"
+#include "logmodel.h"
 
 ConnectionGuard::~ConnectionGuard(){
     DisconnectNamedPipe(pipeHandle);
