@@ -13,6 +13,7 @@ SOURCES += \
     dllmain.cpp
 
 HEADERS += \
+    detours.h \
     pch.h
 
 # Default rules for deployment.
@@ -20,3 +21,11 @@ unix {
     target.path = /usr/lib
 }
 !isEmpty(target.path): INSTALLS += target
+
+win32: LIBS += -L$$PWD/../../ext/detours/ -ldetours
+
+INCLUDEPATH += $$PWD/../../ext/detours
+DEPENDPATH += $$PWD/../../ext/detours
+
+win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../../ext/detours/detours.lib
+else:win32-g++: PRE_TARGETDEPS += $$PWD/../../ext/detours/libdetours.a

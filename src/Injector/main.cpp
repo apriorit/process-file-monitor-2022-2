@@ -4,7 +4,7 @@ int main(int argc, char** argv)
 {
     try
     {
-        if (argc != 2) throw std::runtime_error("PID of the target function must be passed to the injector");
+        if (argc < 2) throw std::runtime_error("PID of the target function must be passed to the injector");
 
         // target process PID
         DWORD PID = (DWORD)(atol(argv[1]));
