@@ -54,11 +54,19 @@ void PipeServer::serverLoop(){
         }
         switch(command.second){
         case Commands::SendPermission:
-            if(writeToPipe("5")){
-                qDebug() << "Permission sended !";
+            try{
+                std::string permission;
+                permission += processMonitor->getCopyOfProcessInfoByPid(command.first).getPermissionsAsChar();
+                if(writeToPipe(permission)){
+                    qDebug() << "Permission sended !";
+                }
+                else{
+                    qDebug() << "Failed to send permission !";
+                    continue;
+                }
             }
-            else{
-                qDebug() << "Failed to send permission !";
+            catch(const std::out_of_range&){
+                qDebug() << QString::fromStdString("processInfo not found with pid" + std::to_string(command.first));
                 continue;
             }
         break;

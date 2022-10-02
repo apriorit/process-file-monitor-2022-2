@@ -8,7 +8,6 @@
 
 int main(int argc, char *argv[])
 {
-    PipeServer();
     QApplication a(argc, argv);
 
     LogModel logModel;
@@ -16,8 +15,12 @@ int main(int argc, char *argv[])
     ProcessesSeeker processSeeker;
     ProcessMonitor processMonitor(&processSeeker);
     ProcessesModel processesModel(nullptr,&processMonitor);
+    //TODO prevent Data Races !
+
 
     MainWindow window(nullptr, &processesModel, &logModel);
     window.show();
-    return a.exec();
+    a.exec();
+    PipeServer(&processMonitor, &logModel);
+    return 0;
 }

@@ -24,7 +24,9 @@ private:
 class PipeServer
 {
 public:
-    PipeServer(){
+    PipeServer(ProcessMonitor* processMonitor, LogModel* logModel)
+        :processMonitor{processMonitor},
+        logModel{logModel}{
         pipeHandle = createNewPipe(TEXT("\\\\.\\pipe\\ProcessMonitorApp"));
         serverLoop();
     }
@@ -34,6 +36,7 @@ private:
     void serverLoop();
     std::string readDataFromPipe();
     bool writeToPipe(const std::string& message);
+
     const DWORD BufferSize = 4096;
     const DWORD TimeOut = 0;
     HANDLE pipeHandle;
