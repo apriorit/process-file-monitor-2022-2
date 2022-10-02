@@ -10,6 +10,16 @@ enum class Commands{
     ReceiveLog
 };
 
+class ConnectionGuard{
+public:
+    ConnectionGuard(HANDLE& pipeHandle):pipeHandle{pipeHandle}{}
+    ~ConnectionGuard(){
+        DisconnectNamedPipe(pipeHandle);
+    }
+private:
+    HANDLE pipeHandle;
+};
+
 class PipeServer
 {
 public:

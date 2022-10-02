@@ -27,22 +27,41 @@ void PipeServer::serverLoop(){
 
         if(connectionStatus == 0 && error != ERROR_PIPE_CONNECTED){
             qDebug() << "Failed to connect !";
+            continue;
         }
+
+        ConnectionGuard connectionGuard(pipeHandle);
+
         qDebug() << "Client connected !";
 
-        std::string command = readDataFromPipe();
-        qDebug() << QString::fromStdString("Received command <" + command+">");
-
-        if(command == "SendPermission"){
-            bool success = writeToPipe("5");
-            if(success){
-                qDebug() << "Permission sended !";
-            }
-            else{
-                qDebug() << "Failed to send permission !";
-            }
+        const std::string commandStr = readDataFromPipe();
+        qDebug() << QString::fromStdString("Received command <" + commandStr+">");
+        std::pair<DWORD, Commands> command;
+        try{
+            command = getCommandAndPidFromRequest(commandStr);
         }
-        DisconnectNamedPipe(pipeHandle);
+        catch(std::invalid_argument& e){
+            qDebug("Invalid request !") ;
+            continue;
+        }
+        switch(command.second){
+            case Commands::SendPermission:
+                if(writeToPipe("5")){
+                    qDebug() << "Permission sended !";
+                }
+                else{
+                    qDebug() << "Failed to send permission !";
+                    continue;
+                }
+            break;
+            case Commands::ReceiveLog:
+                auto log = readDataFromPipe();
+                qDebug() << QString("Received log ") + QString::fromStdString(log);
+            break;
+            defualt:
+                qDebug() << "Unknown command !";
+                continue;
+        }
     }
 }
 
