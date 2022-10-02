@@ -13,9 +13,8 @@ enum class Commands{
 class ConnectionGuard{
 public:
     ConnectionGuard(HANDLE& pipeHandle):pipeHandle{pipeHandle}{}
-    ~ConnectionGuard(){
-        DisconnectNamedPipe(pipeHandle);
-    }
+    ~ConnectionGuard();
+
 private:
     HANDLE pipeHandle;
 };
@@ -36,7 +35,5 @@ private:
     const DWORD BufferSize = 4096;
     const DWORD TimeOut = 0;
     HANDLE pipeHandle;
-
-
 
 };

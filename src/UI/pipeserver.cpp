@@ -1,6 +1,10 @@
 #include "pch.h"
 #include "pipeserver.h"
 
+ConnectionGuard::~ConnectionGuard(){
+    DisconnectNamedPipe(pipeHandle);
+}
+
 HANDLE PipeServer::createNewPipe(LPCWSTR PipeName){
     const DWORD PipeAccess = PIPE_ACCESS_DUPLEX;
     const DWORD PipeMode = PIPE_READMODE_MESSAGE | PIPE_TYPE_MESSAGE | PIPE_WAIT;
@@ -18,7 +22,9 @@ HANDLE PipeServer::createNewPipe(LPCWSTR PipeName){
 }
 
 void PipeServer::serverLoop(){
+    int calls = 0;
     while(true){
+        qDebug() << calls++;
         DWORD connectionStatus = 0;
         DWORD error = 0;
         qDebug() << "Waiting for connection ...";
@@ -45,20 +51,23 @@ void PipeServer::serverLoop(){
             continue;
         }
         switch(command.second){
-            case Commands::SendPermission:
-                if(writeToPipe("5")){
-                    qDebug() << "Permission sended !";
-                }
-                else{
-                    qDebug() << "Failed to send permission !";
-                    continue;
-                }
-            break;
-            case Commands::ReceiveLog:
-                auto log = readDataFromPipe();
-                qDebug() << QString("Received log ") + QString::fromStdString(log);
-            break;
-            defualt:
+        case Commands::SendPermission:
+            if(writeToPipe("5")){
+                qDebug() << "Permission sended !";
+            }
+            else{
+                qDebug() << "Failed to send permission !";
+                continue;
+            }
+        break;
+        case Commands::ReceiveLog:
+        {
+            auto log = readDataFromPipe();
+            qDebug() << QString("Received log ") + QString::fromStdString(log);
+            writeToPipe(log);
+        }
+        break;
+        default:
                 qDebug() << "Unknown command !";
                 continue;
         }
@@ -92,6 +101,7 @@ bool PipeServer::writeToPipe(const std::string& message){
         qDebug() << QString("Failed to send all message");
         return false;
     }
+    FlushFileBuffers(pipeHandle);
     return true;
 }
 
