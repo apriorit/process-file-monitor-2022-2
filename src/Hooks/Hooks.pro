@@ -28,4 +28,4 @@ INCLUDEPATH += $$PWD/../../ext/detours
 DEPENDPATH += $$PWD/../../ext/detours
 
 win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../../ext/detours/detours.lib
-else:win32-g++: PRE_TARGETDEPS += $$PWD/../../ext/detours/libdetours.a
+

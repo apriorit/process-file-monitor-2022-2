@@ -31,7 +31,7 @@ BOOL APIENTRY DllMain(HINSTANCE hinst, DWORD dwReason, LPVOID reserved)
         DetourTransactionBegin();
         DetourUpdateThread(GetCurrentThread());
 
-        DetourAttach(&(PVOID&)TrueOpenFile, HookedOpenFile);
+        DetourAttach(&(PVOID&)TrueOpenFile, (PVOID&)HookedOpenFile);
         error = DetourTransactionCommit();
 
         if (error == NO_ERROR) {
