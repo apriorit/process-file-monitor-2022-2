@@ -15,6 +15,7 @@ SOURCES += \
     logmodel.cpp \
     main.cpp \
     mainwindow.cpp \
+    pipeserver.cpp \
     processesmodel.cpp \
     processesseeker.cpp \
     processesstorage.cpp \
@@ -25,6 +26,7 @@ HEADERS += \
     logmodel.h \
     mainwindow.h \
     pch.h \
+    pipeserver.h \
     processesmodel.h \
     processesseeker.h \
     processesstorage.h \

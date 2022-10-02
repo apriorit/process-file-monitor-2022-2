@@ -4,9 +4,11 @@
 #include "logmodel.h"
 #include "processmonitor.h"
 #include "processesseeker.h"
+#include "pipeserver.h"
 
 int main(int argc, char *argv[])
 {
+    PipeServer();
     QApplication a(argc, argv);
 
     LogModel logModel;

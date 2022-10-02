@@ -16,10 +16,12 @@ SOURCES += \
     main.cpp \
     processmonitortestingutility.cpp \
     tst_bothprocesseslistequals.cpp \
+    tst_pipeservertest.cpp \
     tst_processesmonitortest.cpp \
     tst_processesinfotest.cpp \
     ../processmonitor.cpp \
     ../processinfo.cpp \
+    ../pipeserver.cpp \
     ../processesstorage.cpp \
     tst_processesseeker.cpp \
     tst_processesstorage.cpp
