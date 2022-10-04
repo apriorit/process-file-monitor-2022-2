@@ -28,12 +28,12 @@ public:
         :processMonitor{processMonitor},
         logModel{logModel}{
         pipeHandle = createNewPipe(TEXT("\\\\.\\pipe\\ProcessMonitorApp"));
-        serverLoop();
     }
+
     static std::pair<DWORD, Commands> getCommandAndPidFromRequest(const std::string& Request);
+    void startServerLoop();
 private:
     HANDLE createNewPipe(LPCWSTR PipeName);
-    void serverLoop();
     std::string readDataFromPipe();
     bool writeToPipe(const std::string& message);
 

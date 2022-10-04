@@ -6,8 +6,19 @@
 #include "processesseeker.h"
 #include "pipeserver.h"
 
+DWORD WINAPI ServerThreadStart(LPVOID pipeServer){
+    ((PipeServer *)pipeServer)->startServerLoop();
+    return 0;
+}
+
 int main(int argc, char *argv[])
 {
+    /*TODO
+     * 1.Prevent data races
+     * 2.Make working server - client mechanizm
+     * 2.Find cleaner way to kill server thread (probably overlaped will fix that)
+     * 3.Refactor it for overlaped (before that I must make communication scheme and dependence)
+    */
     QApplication a(argc, argv);
 
     LogModel logModel;
@@ -15,12 +26,22 @@ int main(int argc, char *argv[])
     ProcessesSeeker processSeeker;
     ProcessMonitor processMonitor(&processSeeker);
     ProcessesModel processesModel(nullptr,&processMonitor);
-    //TODO prevent Data Races !
 
+    PipeServer pipeServer(&processMonitor, &logModel);
+    HANDLE serverThreadHandle = CreateThread(
+                NULL,
+                0,
+                ServerThreadStart,
+                &pipeServer,
+                0,
+                NULL);
+    if(serverThreadHandle == NULL){
+        exit(-1);
+    }
 
     MainWindow window(nullptr, &processesModel, &logModel);
     window.show();
     a.exec();
-    PipeServer(&processMonitor, &logModel);
+
     return 0;
 }

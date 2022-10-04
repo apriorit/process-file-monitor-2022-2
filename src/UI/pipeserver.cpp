@@ -23,7 +23,7 @@ HANDLE PipeServer::createNewPipe(LPCWSTR PipeName){
     return pipeHandle;
 }
 
-void PipeServer::serverLoop(){
+void PipeServer::startServerLoop(){
     int calls = 0;
     while(true){
         qDebug() << calls++;
