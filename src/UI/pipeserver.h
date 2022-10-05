@@ -5,7 +5,7 @@
 
 class ProcessMonitor;
 class LogModel;
-
+struct LogInfo;
 enum class Commands{
     Unknown,
     SendPermission,
@@ -31,12 +31,12 @@ public:
     }
 
     static std::pair<DWORD, Commands> getCommandAndPidFromRequest(const std::string& Request);
+    static LogInfo parseRequest(std::string request);
     void startServerLoop();
 private:
     HANDLE createNewPipe(LPCWSTR PipeName);
     std::string readDataFromPipe();
     bool writeToPipe(const std::string& message);
-
     const DWORD BufferSize = 4096;
     const DWORD TimeOut = 0;
     HANDLE pipeHandle;

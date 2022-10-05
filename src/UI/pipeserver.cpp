@@ -149,3 +149,33 @@ std::pair<DWORD, Commands> PipeServer::getCommandAndPidFromRequest(const std::st
 
     return returnValue;
 }
+
+LogInfo PipeServer::parseRequest(std::string request){
+    LogInfo logInfo(0);
+    std::regex propertySegmentRegEx("(<[^<>/]+>[^<>/]+</[^<>/]+>)");
+    std::smatch propertySegmentMatch;
+
+    std::regex propertyMemberRegEx("([^<>/]+)");
+    std::smatch propertyMemberMatch;
+
+    while(std::regex_search(request, propertySegmentMatch, propertySegmentRegEx)){
+        std::string propertySegment = propertySegmentMatch.str();
+        //Get name of the property
+        std::regex_search(propertySegment, propertyMemberMatch , propertyMemberRegEx);
+        std::string propertyName = propertyMemberMatch[0].str();
+        //Get value of the property
+        propertySegment = propertyMemberMatch.suffix();
+        std::regex_search(propertySegment, propertyMemberMatch , propertyMemberRegEx);
+        std::string propertyValue = propertyMemberMatch[0].str();
+        request = propertySegmentMatch.suffix();
+
+        if(propertyName == "PID"){
+            logInfo.pid = std::strtoul(propertyValue.c_str(), NULL, 10);
+        }
+    }
+    // TODO do the rest of the properties!
+    // TODO if PID is still 0 (cannot be) throw an exception!
+    // TODO check if the request has the correct syntax
+    qDebug() << "helo";
+    return logInfo;
+}

@@ -4,8 +4,8 @@
 LogModel::LogModel(QObject *parent)
     : QAbstractTableModel(parent)
 {
-    LogInfo update{"C://Update.exe","Write",0,5,5,"None","handle","24:00:00","Angry User"};
-    logs.push_back(update);
+    //LogInfo update{"C://Update.exe","Write",0,5,5,"None","handle","24:00:00","Angry User"};
+    //logs.push_back(update);
 }
 
 QVariant LogModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -75,7 +75,7 @@ QVariant LogModel::data(const QModelIndex &index, int role) const
         case LogTableColumn::FileHandle:
             return log.fileHandle;
         case LogTableColumn::OperationTime:
-            return log.operationTime;
+            return QVariant::fromValue(log.operationTime);
         case LogTableColumn::ResultOfTheOperation:
             return log.resultOfTheOperation;
         default:
@@ -86,7 +86,7 @@ QVariant LogModel::data(const QModelIndex &index, int role) const
 }
 
 void LogModel::clearLogs(){
-    emit beginResetModel();
+    beginResetModel();
     logs.clear();
-    emit endResetModel();
+    endResetModel();
 }

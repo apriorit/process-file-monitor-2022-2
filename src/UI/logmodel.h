@@ -1,18 +1,6 @@
 #pragma once
-
 #include <QAbstractTableModel>
-
-struct LogInfo{
-    QString filePath;
-    QString operationType;
-    DWORD pid;
-    DWORD numberOfBytes;
-    DWORD offset;
-    QString preview;
-    QString fileHandle;
-    QString operationTime;
-    QString resultOfTheOperation;
-};
+#include "loginfo.h"
 
 enum class LogTableColumn{
     FileHandle,
