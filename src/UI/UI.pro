@@ -15,7 +15,6 @@ SOURCES += \
     logmodel.cpp \
     main.cpp \
     mainwindow.cpp \
-    mutexguard.cpp \
     pipeserver.cpp \
     processesmodel.cpp \
     processesseeker.cpp \
@@ -26,7 +25,6 @@ SOURCES += \
 HEADERS += \
     logmodel.h \
     mainwindow.h \
-    mutexguard.h \
     pch.h \
     pipeserver.h \
     processesmodel.h \
