@@ -20,5 +20,6 @@
 #include <string>
 #include <algorithm>
 #include <sstream>
+#include <mutex>
 
 #endif // PCH_H
