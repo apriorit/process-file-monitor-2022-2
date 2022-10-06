@@ -4,6 +4,28 @@
 
 using namespace testing;
 
+TEST(PipeServerTest, ParseFilePathFromRequest){
+    const std::string request = "<PID>5</PID><FPATH>C:\\Somedir\\main.cpp</FPATH>";
+    LogInfo expect(5);
+    expect.filePath = "C:\\Somedir\\main.cpp";
+
+    auto result = PipeServer::parseRequest(request);
+
+    EXPECT_EQ(result == expect, true);
+}
+
+TEST(PipeServerTest, ParsePidWrongPidPassed){
+    const std::string request = "<PID>Ziemniaczek</PID>";
+
+    EXPECT_THROW(PipeServer::parseRequest(request), std::invalid_argument);
+};
+
+TEST(PipeServerTest, ParsePidCanNotBeZero){
+    const std::string request = "<PID>0</PID>";
+
+    EXPECT_THROW(PipeServer::parseRequest(request), std::invalid_argument);
+};
+
 TEST(PipeServerTest, ParsePidFromRequest){
     const std::string request = "<PID>15</PID>";
     LogInfo expect(15);

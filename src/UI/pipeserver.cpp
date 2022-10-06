@@ -172,10 +172,15 @@ LogInfo PipeServer::parseRequest(std::string request){
         if(propertyName == "PID"){
             logInfo.pid = std::strtoul(propertyValue.c_str(), NULL, 10);
         }
+        else if(propertyName == "FPATH"){
+            logInfo.filePath = QString::fromStdString(propertyValue);
+        }
     }
     // TODO do the rest of the properties!
-    // TODO if PID is still 0 (cannot be) throw an exception!
     // TODO check if the request has the correct syntax
-    qDebug() << "helo";
+    // TODO fix GTEST PATH WAS SET BY QT CREATOR +-
+    if(logInfo.pid == 0){
+        throw std::invalid_argument("Pid is not correct !");
+    }
     return logInfo;
 }
