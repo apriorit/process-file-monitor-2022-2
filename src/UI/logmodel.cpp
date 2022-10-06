@@ -1,11 +1,16 @@
+#include "logbuffer.h"
 #include "pch.h"
 #include "logmodel.h"
 
-LogModel::LogModel(QObject *parent)
-    : QAbstractTableModel(parent)
+LogModel::LogModel(QObject *parent, LogBuffer* logBuffer)
+    : QAbstractTableModel(parent),
+      logBuffer{logBuffer},
+      timer{new QTimer(this)}
 {
-    //LogInfo update{"C://Update.exe","Write",0,5,5,"None","handle","24:00:00","Angry User"};
-    //logs.push_back(update);
+    const int updateIntervalInMs = 100;
+    timer->setInterval(updateIntervalInMs);
+    connect(timer, &QTimer::timeout , this, &LogModel::getDataFromBuffer);
+    timer->start();
 }
 
 QVariant LogModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -83,6 +88,15 @@ QVariant LogModel::data(const QModelIndex &index, int role) const
         }
     }
     return QVariant();
+}
+
+void LogModel::getDataFromBuffer(){
+    size_t logsCountBeforeAddingBuffer = logs.size();
+    auto logsFromBuffer = logBuffer->getLogsFromTheBuffer();
+    if(logsFromBuffer.size() == 0 ) return;
+    beginInsertRows(QModelIndex(), logsCountBeforeAddingBuffer , logsCountBeforeAddingBuffer + logsFromBuffer.size() - 1);
+    logs.insert(logs.end(), logsFromBuffer.begin(), logsFromBuffer.end());
+    endInsertRows();
 }
 
 void LogModel::clearLogs(){

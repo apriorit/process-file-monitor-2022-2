@@ -5,6 +5,7 @@
 #include "processmonitor.h"
 #include "processesseeker.h"
 #include "pipeserver.h"
+#include "logbuffer.h"
 
 DWORD WINAPI ServerThreadStart(LPVOID pipeServer){
     ((PipeServer *)pipeServer)->startServerLoop();
@@ -21,13 +22,15 @@ int main(int argc, char *argv[])
     */
     QApplication a(argc, argv);
 
-    LogModel logModel;
+    LogBuffer logBuffer;
+    logBuffer.addLogToTheBuffer(LogInfo(5));
+    LogModel logModel(nullptr, &logBuffer);
 
     ProcessesSeeker processSeeker;
     ProcessMonitor processMonitor(&processSeeker);
     ProcessesModel processesModel(nullptr,&processMonitor);
 
-    PipeServer pipeServer(&processMonitor, &logModel);
+    PipeServer pipeServer(&processMonitor, &logBuffer);
     HANDLE serverThreadHandle = CreateThread(
                 NULL,
                 0,

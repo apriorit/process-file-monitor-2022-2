@@ -14,12 +14,12 @@ void ProcessMonitor::updateProcessesTable() {
     processesStorage->update(update);
 }
 
-ProcessInfo ProcessMonitor::getCopyOfProcessInfoByIndex(const size_t Index){
+ProcessInfo ProcessMonitor::getCopyOfProcessInfoByIndex(const size_t Index) const {
     std::lock_guard<std::mutex> guard(processesStorageMutex);
     return processesStorage->getProcessByIndex(Index);
 }
 
-ProcessInfo ProcessMonitor::getCopyOfProcessInfoByPid(const DWORD Pid) {
+ProcessInfo ProcessMonitor::getCopyOfProcessInfoByPid(const DWORD Pid) const {
     std::lock_guard<std::mutex> guard(processesStorageMutex);
     return processesStorage->getProcessByPid(Pid);
 }

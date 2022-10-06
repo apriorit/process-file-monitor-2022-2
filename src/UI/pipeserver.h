@@ -4,7 +4,7 @@
 #include <QDebug>
 
 class ProcessMonitor;
-class LogModel;
+class LogBuffer;
 struct LogInfo;
 enum class Commands{
     Unknown,
@@ -24,9 +24,9 @@ private:
 class PipeServer
 {
 public:
-    PipeServer(ProcessMonitor* processMonitor, LogModel* logModel)
+    PipeServer(ProcessMonitor* processMonitor, LogBuffer* logBuffer)
         :processMonitor{processMonitor},
-        logModel{logModel}{
+        logBuffer{logBuffer}{
         pipeHandle = createNewPipe(TEXT("\\\\.\\pipe\\ProcessMonitorApp"));
     }
 
@@ -42,5 +42,5 @@ private:
     HANDLE pipeHandle;
 
     ProcessMonitor* processMonitor;
-    LogModel* logModel;
+    LogBuffer* logBuffer;
 };

@@ -1,7 +1,7 @@
 #include "pch.h"
+#include "logbuffer.h"
 #include "pipeserver.h"
 #include "processmonitor.h"
-#include "logmodel.h"
 
 ConnectionGuard::~ConnectionGuard(){
     DisconnectNamedPipe(pipeHandle);
@@ -32,13 +32,11 @@ void PipeServer::startServerLoop(){
         qDebug() << "Waiting for connection ...";
         connectionStatus = ConnectNamedPipe(pipeHandle,nullptr);
         error = GetLastError();
-
+        ConnectionGuard connectionGuard(pipeHandle);
         if(connectionStatus == 0 && error != ERROR_PIPE_CONNECTED){
             qDebug() << "Failed to connect !";
             continue;
         }
-
-        ConnectionGuard connectionGuard(pipeHandle);
 
         qDebug() << "Client connected !";
 
@@ -72,9 +70,8 @@ void PipeServer::startServerLoop(){
         break;
         case Commands::ReceiveLog:
         {
-            auto log = readDataFromPipe();
-            qDebug() << QString("Received log ") + QString::fromStdString(log);
-            writeToPipe(log);
+            auto request = readDataFromPipe();
+            logBuffer->addLogToTheBuffer(PipeServer::parseRequest(request));
         }
         break;
         default:
