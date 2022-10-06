@@ -4,7 +4,6 @@
 
 struct LogInfo{
     LogInfo(const DWORD pid);
-    LogInfo() = default;
     QString filePath = "";
     QString operationType = "";
     QString preview = "";

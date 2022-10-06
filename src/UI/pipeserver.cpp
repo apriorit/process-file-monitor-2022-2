@@ -175,8 +175,28 @@ LogInfo PipeServer::parseRequest(std::string request){
         else if(propertyName == "FPATH"){
             logInfo.filePath = QString::fromStdString(propertyValue);
         }
+        else if(propertyName == "OTYPE"){
+            logInfo.operationType = QString::fromStdString(propertyValue);
+        }
+        else if(propertyName == "PREVIEW"){
+            logInfo.preview = QString::fromStdString(propertyValue);
+        }
+        else if(propertyName == "FHANDLE"){
+            logInfo.fileHandle = QString::fromStdString(propertyValue);
+        }
+        else if(propertyName == "RESULT"){
+            logInfo.resultOfTheOperation = QString::fromStdString(propertyValue);
+        }
+        else if(propertyName == "NOB"){
+            logInfo.numberOfBytes = std::strtoul(propertyValue.c_str(), NULL, 10);
+        }
+        else if(propertyName == "OFFSET"){
+            logInfo.offset = std::strtoul(propertyValue.c_str(), NULL, 10);
+        }
+        else if(propertyName == "OTIME"){
+            logInfo.operationTime = std::strtoul(propertyValue.c_str(), NULL, 10);
+        }
     }
-    // TODO do the rest of the properties!
     // TODO check if the request has the correct syntax
     // TODO fix GTEST PATH WAS SET BY QT CREATOR +-
     if(logInfo.pid == 0){
