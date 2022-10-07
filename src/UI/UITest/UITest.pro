@@ -1,3 +1,4 @@
+GOOGLETEST_DIR = ..\..\..\ext\googletest
 include(gtest_dependency.pri)
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -10,7 +11,6 @@ CONFIG += qt
 CONFIG   += cmdline precompile_header
 
 PRECOMPILED_HEADER = pch.h
-
 SOURCES += \
     ../processesseeker.cpp \
     main.cpp \
@@ -24,6 +24,7 @@ SOURCES += \
     ../processinfo.cpp \
     ../pipeserver.cpp \
     ../loginfo.cpp \
+    ../logbuffer.cpp \
     ../processesstorage.cpp \
     tst_processesseeker.cpp \
     tst_processesstorage.cpp

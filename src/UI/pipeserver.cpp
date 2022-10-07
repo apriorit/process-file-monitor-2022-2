@@ -194,8 +194,6 @@ LogInfo PipeServer::parseRequest(std::string request){
             logInfo.operationTime = std::strtoul(propertyValue.c_str(), NULL, 10);
         }
     }
-    // TODO check if the request has the correct syntax
-    // TODO fix GTEST PATH WAS SET BY QT CREATOR +-
     if(logInfo.pid == 0){
         throw std::invalid_argument("Pid is not correct !");
     }
