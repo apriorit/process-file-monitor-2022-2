@@ -24,7 +24,7 @@ SOURCES += \
     ../processmonitor.cpp \
     ../processinfo.cpp \
     ../../Common/pipehost.cpp \
-    ../../Common/pipeserver.cpp \
+    ../pipeserver.cpp \
     ../../Common/pipeclient.cpp \
     ../../Common/loginfo.cpp \
     ../logbuffer.cpp \

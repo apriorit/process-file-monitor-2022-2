@@ -1,8 +1,9 @@
 #include "pch.h"
-#include "../UI/logbuffer.h"
+#include "logbuffer.h"
 #include "pipeserver.h"
-#include "../UI/processmonitor.h"
+#include "processmonitor.h"
 #include <regex>
+
 ConnectionGuard::~ConnectionGuard(){
     DisconnectNamedPipe(pipeHandle);
 }
@@ -27,7 +28,7 @@ void PipeServer::startServerLoop(){
 }
 
 bool PipeServer::ReceiveLog(const std::string& request){
-    std::regex receiveLogRegex("^(<[^<>/]+>[^<>/]+</[^<>/]+>)+$");
+    std::regex receiveLogRegex("^(<[^<>/]+>[^<>/]*</[^<>/]+>)+$");
     if(std::regex_match(request, receiveLogRegex)){
         auto data = readDataFromPipe(pipeHandle);
         try{

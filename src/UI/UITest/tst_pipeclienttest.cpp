@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "../../Common/pipeclient.h"
-#include "../../Common/pipeserver.h"
+#include "../pipeserver.h"
 #include "../../Common/loginfo.h"
 
 using namespace testing;

@@ -1,12 +1,15 @@
 #pragma once
 
+#include "../Common/pipehost.h"
 #include <windows.h>
 #include <QDebug>
-#include "pipehost.h"
 
 class ProcessMonitor;
+
 class LogBuffer;
+
 struct LogInfo;
+
 enum class Commands{
     Unknown,
     SendPermission,
@@ -22,7 +25,7 @@ private:
     HANDLE pipeHandle;
 };
 
-class PipeServer  : private PipeHost
+class PipeServer  : public PipeHost
 {
 public:
     PipeServer(ProcessMonitor* processMonitor, LogBuffer* logBuffer)

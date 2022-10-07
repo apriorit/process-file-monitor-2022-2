@@ -15,11 +15,11 @@ SOURCES += \
     ../Common/loginfo.cpp \
     ../Common/pipeclient.cpp \
     ../Common/pipehost.cpp \
-    ../Common/pipeserver.cpp \
     logbuffer.cpp \
     logmodel.cpp \
     main.cpp \
     mainwindow.cpp \
+    pipeserver.cpp \
     processesmodel.cpp \
     processesseeker.cpp \
     processesstorage.cpp \
@@ -30,11 +30,11 @@ HEADERS += \
     ../Common/loginfo.h \
     ../Common/pipeclient.h \
     ../Common/pipehost.h \
-    ../Common/pipeserver.h \
     logbuffer.h \
     logmodel.h \
     mainwindow.h \
     pch.h \
+    pipeserver.h \
     processesmodel.h \
     processesseeker.h \
     processesstorage.h \

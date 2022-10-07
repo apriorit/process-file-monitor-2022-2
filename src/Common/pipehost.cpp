@@ -1,5 +1,8 @@
-#include "pch.h"
 #include "pipehost.h"
+#include <QString>
+#include <QDebug>
+
+const LPCWSTR PipeHost::PipeName = TEXT("\\\\.\\pipe\\ProcessMonitorApp");
 
 HANDLE PipeHost::createNewPipe(LPCWSTR PipeName){
     const DWORD PipeAccess = PIPE_ACCESS_DUPLEX;
@@ -27,9 +30,8 @@ std::string PipeHost::readDataFromPipe(HANDLE& pipeHandle){
         if(GetLastError() != ERROR_MORE_DATA && readCount == 0){
             break;
         }
-        std::copy(&buffer[0], &buffer[readCount - 1], back_inserter(data));
+        std::copy(&buffer[0], &buffer[readCount], back_inserter(data));
     }
-
     return data;
 }
 
