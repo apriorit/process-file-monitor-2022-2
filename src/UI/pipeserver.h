@@ -31,7 +31,7 @@ public:
     PipeServer(ProcessMonitor* processMonitor, LogBuffer* logBuffer)
         :processMonitor{processMonitor},
         logBuffer{logBuffer}{
-        pipeHandle = createNewPipe(TEXT("\\\\.\\pipe\\ProcessMonitorApp"));
+        pipeHandle = createNewPipe(PipeName);
     }
 
     static std::pair<DWORD, Commands> getCommandAndPidFromRequest(const std::string& Request);

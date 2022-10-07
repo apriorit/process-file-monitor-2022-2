@@ -4,7 +4,7 @@
 #include "logmodel.h"
 #include "processmonitor.h"
 #include "processesseeker.h"
-#include "../Common/pipeserver.h"
+#include "pipeserver.h"
 #include "logbuffer.h"
 
 DWORD WINAPI ServerThreadStart(LPVOID pipeServer){
@@ -15,15 +15,12 @@ DWORD WINAPI ServerThreadStart(LPVOID pipeServer){
 int main(int argc, char *argv[])
 {
     /*TODO
-     * 1.Prevent data races
-     * 2.Make working server - client mechanizm
-     * 2.Find cleaner way to kill server thread (probably overlaped will fix that)
-     * 3.Refactor it for overlaped (before that I must make communication scheme and dependence)
+     * 1.Find cleaner way to kill server thread (probably overlaped will fix that)
+     * 2.Refactor it for overlaped (before that I must make communication scheme and dependence)
     */
     QApplication a(argc, argv);
 
     LogBuffer logBuffer;
-    logBuffer.addLogToTheBuffer(LogInfo(5));
     LogModel logModel(nullptr, &logBuffer);
 
     ProcessesSeeker processSeeker;

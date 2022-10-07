@@ -34,7 +34,7 @@ QVariant LogModel::headerData(int section, Qt::Orientation orientation, int role
         case LogTableColumn::OperationTime:
             return "Operation Time";
         case LogTableColumn::ResultOfTheOperation:
-            return "Result Of The Operation";
+            return "Result";
         default:
             return QVariant();
         }

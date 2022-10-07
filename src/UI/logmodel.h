@@ -5,15 +5,15 @@
 class LogBuffer;
 
 enum class LogTableColumn{
-    FileHandle,
+    OperationTime,
+    Pid,
     FilePath,
     OperationType,
-    Pid,
+    ResultOfTheOperation,
+    FileHandle,
     NumberOfBytes,
     Offset,
     Preview,
-    OperationTime,
-    ResultOfTheOperation,
     ColumnCount
 };
 
