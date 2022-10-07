@@ -17,13 +17,15 @@ SOURCES += \
     processmonitortestingutility.cpp \
     tst_bothprocesseslistequals.cpp \
     tst_loginfotest.cpp \
+    tst_pipeclienttest.cpp \
     tst_pipeservertest.cpp \
     tst_processesmonitortest.cpp \
     tst_processesinfotest.cpp \
     ../processmonitor.cpp \
     ../processinfo.cpp \
-    ../../Common/pipeserver.cpp \
     ../../Common/pipehost.cpp \
+    ../../Common/pipeserver.cpp \
+    ../../Common/pipeclient.cpp \
     ../../Common/loginfo.cpp \
     ../logbuffer.cpp \
     ../processesstorage.cpp \

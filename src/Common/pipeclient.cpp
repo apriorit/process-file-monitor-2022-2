@@ -17,5 +17,15 @@ bool PipeClient::SendLog(const LogInfo& logInfo, HANDLE& pipeHandle){
 }
 
 std::string PipeClient::parseLogInfoIntoRequest(const LogInfo& logInfo){
-
+    std::string request = "";
+    request += "<PID>" + std::to_string(logInfo.pid) + "</PID>";
+    request += "<OFFSET>" + std::to_string(logInfo.offset) + "</OFFSET>";
+    request += "<NOB>" + std::to_string(logInfo.numberOfBytes) + "</NOB>";
+    request += "<OTIME>" + std::to_string(logInfo.operationTime) + "</OTIME>";
+    request += "<FPATH>" + logInfo.filePath.toStdString() + "</FPATH>";
+    request += "<OTYPE>" + logInfo.operationType.toStdString() + "</OTYPE>";
+    request += "<PREVIEW>" + logInfo.preview.toStdString() + "</PREVIEW>";
+    request += "<FHANDLE>" + logInfo.fileHandle.toStdString() + "</FHANDLE>";
+    request += "<RESULT>" + logInfo.resultOfTheOperation.toStdString() + "</RESULT>";
+    return request;
 }
