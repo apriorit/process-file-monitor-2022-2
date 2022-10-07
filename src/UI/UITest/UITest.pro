@@ -22,7 +22,8 @@ SOURCES += \
     tst_processesinfotest.cpp \
     ../processmonitor.cpp \
     ../processinfo.cpp \
-    ../pipeserver.cpp \
+    ../../Common/pipeserver.cpp \
+    ../../Common/pipehost.cpp \
     ../loginfo.cpp \
     ../logbuffer.cpp \
     ../processesstorage.cpp \

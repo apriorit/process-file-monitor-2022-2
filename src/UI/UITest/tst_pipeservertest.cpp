@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "../pipeserver.h"
+#include "../../Common/pipeserver.h"
 #include "../loginfo.h"
 
 using namespace testing;

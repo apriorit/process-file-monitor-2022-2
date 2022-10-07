@@ -1,26 +1,10 @@
 #include "pch.h"
-#include "logbuffer.h"
+#include "../UI/logbuffer.h"
 #include "pipeserver.h"
-#include "processmonitor.h"
+#include "../UI/processmonitor.h"
 #include <regex>
 ConnectionGuard::~ConnectionGuard(){
     DisconnectNamedPipe(pipeHandle);
-}
-
-HANDLE PipeServer::createNewPipe(LPCWSTR PipeName){
-    const DWORD PipeAccess = PIPE_ACCESS_DUPLEX;
-    const DWORD PipeMode = PIPE_READMODE_MESSAGE | PIPE_TYPE_MESSAGE | PIPE_WAIT;
-    const DWORD Instances = 1;
-    HANDLE pipeHandle = CreateNamedPipe(
-                PipeName,
-                PipeAccess,
-                PipeMode,
-                Instances,
-                BufferSize,
-                BufferSize,
-                TimeOut,
-                NULL);
-    return pipeHandle;
 }
 
 void PipeServer::startServerLoop(){
@@ -35,7 +19,7 @@ void PipeServer::startServerLoop(){
         if(connectionStatus == 0 && error != ERROR_PIPE_CONNECTED){
             continue;
         }
-        const std::string request = readDataFromPipe();
+        const std::string request = readDataFromPipe(pipeHandle);
         qDebug() << QString::fromStdString("Received request <" + request+">");
         if(SendPermission(request)) continue;
         if(ReceiveLog(request)) continue;
@@ -45,7 +29,7 @@ void PipeServer::startServerLoop(){
 bool PipeServer::ReceiveLog(const std::string& request){
     std::regex receiveLogRegex("^(<[^<>/]+>[^<>/]+</[^<>/]+>)+$");
     if(std::regex_match(request, receiveLogRegex)){
-        auto data = readDataFromPipe();
+        auto data = readDataFromPipe(pipeHandle);
         try{
             logBuffer->addLogToTheBuffer(PipeServer::parseRequest(request));
         }
@@ -61,42 +45,11 @@ bool PipeServer::SendPermission(const std::string& request){
         std::string permission;
         try{
             permission += processMonitor->getCopyOfProcessInfoByPid(pid).getPermissionsAsChar();
-            return writeToPipe(permission);
+            return writeToPipe(permission, pipeHandle);
         }
         catch(const std::out_of_range&){}
     }
     return false;
-}
-
-std::string PipeServer::readDataFromPipe(){
-    char buffer[BufferSize];
-    std::string data = "";
-    DWORD readCount = 0;
-    BOOL readResult = FALSE;
-    while(!readResult){
-        readResult = ReadFile(pipeHandle, buffer, BufferSize , &readCount, NULL);
-        if(GetLastError() != ERROR_MORE_DATA && readCount == 0){
-            break;
-        }
-        std::copy(&buffer[0], &buffer[readCount - 1], back_inserter(data));
-    }
-
-    return data;
-}
-
-bool PipeServer::writeToPipe(const std::string& message){
-    DWORD writeCount = 0;
-    WriteFile(pipeHandle,
-              message.c_str(),
-              message.size(),
-              &writeCount,
-              NULL);
-    if(writeCount != message.size()){
-        qDebug() << QString("Failed to send all message");
-        return false;
-    }
-    FlushFileBuffers(pipeHandle);
-    return true;
 }
 
 LogInfo PipeServer::parseRequest(std::string request){

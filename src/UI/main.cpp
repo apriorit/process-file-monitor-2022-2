@@ -4,7 +4,7 @@
 #include "logmodel.h"
 #include "processmonitor.h"
 #include "processesseeker.h"
-#include "pipeserver.h"
+#include "../Common/pipeserver.h"
 #include "logbuffer.h"
 
 DWORD WINAPI ServerThreadStart(LPVOID pipeServer){

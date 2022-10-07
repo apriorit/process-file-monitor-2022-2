@@ -2,6 +2,7 @@
 
 #include <windows.h>
 #include <QDebug>
+#include "pipehost.h"
 
 class ProcessMonitor;
 class LogBuffer;
@@ -21,7 +22,7 @@ private:
     HANDLE pipeHandle;
 };
 
-class PipeServer
+class PipeServer  : private PipeHost
 {
 public:
     PipeServer(ProcessMonitor* processMonitor, LogBuffer* logBuffer)
@@ -34,13 +35,8 @@ public:
     static LogInfo parseRequest(std::string request);
     void startServerLoop();
 private:
-    HANDLE createNewPipe(LPCWSTR PipeName);
     bool SendPermission(const std::string& request);
     bool ReceiveLog(const std::string& request);
-    std::string readDataFromPipe();
-    bool writeToPipe(const std::string& message);
-    const DWORD BufferSize = 4096;
-    const DWORD TimeOut = 0;
     HANDLE pipeHandle;
 
     ProcessMonitor* processMonitor;
