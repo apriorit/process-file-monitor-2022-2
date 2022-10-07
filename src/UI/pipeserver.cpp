@@ -2,7 +2,7 @@
 #include "logbuffer.h"
 #include "pipeserver.h"
 #include "processmonitor.h"
-
+#include <regex>
 ConnectionGuard::~ConnectionGuard(){
     DisconnectNamedPipe(pipeHandle);
 }
@@ -29,56 +29,43 @@ void PipeServer::startServerLoop(){
         qDebug() << calls++;
         DWORD connectionStatus = 0;
         DWORD error = 0;
-        qDebug() << "Waiting for connection ...";
         connectionStatus = ConnectNamedPipe(pipeHandle,nullptr);
         error = GetLastError();
         ConnectionGuard connectionGuard(pipeHandle);
         if(connectionStatus == 0 && error != ERROR_PIPE_CONNECTED){
-            qDebug() << "Failed to connect !";
             continue;
         }
+        const std::string request = readDataFromPipe();
+        qDebug() << QString::fromStdString("Received request <" + request+">");
+        if(SendPermission(request)) continue;
+        if(ReceiveLog(request)) continue;
+    }
+}
 
-        qDebug() << "Client connected !";
-
-        const std::string commandStr = readDataFromPipe();
-        qDebug() << QString::fromStdString("Received command <" + commandStr+">");
-        std::pair<DWORD, Commands> command;
+bool PipeServer::ReceiveLog(const std::string& request){
+    std::regex receiveLogRegex("^(<[^<>/]+>[^<>/]+</[^<>/]+>)+$");
+    if(std::regex_match(request, receiveLogRegex)){
+        auto data = readDataFromPipe();
         try{
-            command = getCommandAndPidFromRequest(commandStr);
-        }
-        catch(std::invalid_argument& e){
-            qDebug("Invalid request !") ;
-            continue;
-        }
-        switch(command.second){
-        case Commands::SendPermission:
-            try{
-                std::string permission;
-                permission += processMonitor->getCopyOfProcessInfoByPid(command.first).getPermissionsAsChar();
-                if(writeToPipe(permission)){
-                    qDebug() << "Permission sended !";
-                }
-                else{
-                    qDebug() << "Failed to send permission !";
-                    continue;
-                }
-            }
-            catch(const std::out_of_range&){
-                qDebug() << QString::fromStdString("processInfo not found with pid" + std::to_string(command.first));
-                continue;
-            }
-        break;
-        case Commands::ReceiveLog:
-        {
-            auto request = readDataFromPipe();
             logBuffer->addLogToTheBuffer(PipeServer::parseRequest(request));
         }
-        break;
-        default:
-                qDebug() << "Unknown command !";
-                continue;
-        }
+        catch(const std::invalid_argument&){}
     }
+    return false;
+}
+
+bool PipeServer::SendPermission(const std::string& request){
+    std::regex sendPermissionRegex("^[0-9]+$");
+    if(std::regex_match(request, sendPermissionRegex)){
+        const DWORD pid = std::strtoul(request.c_str(), NULL , 10);
+        std::string permission;
+        try{
+            permission += processMonitor->getCopyOfProcessInfoByPid(pid).getPermissionsAsChar();
+            return writeToPipe(permission);
+        }
+        catch(const std::out_of_range&){}
+    }
+    return false;
 }
 
 std::string PipeServer::readDataFromPipe(){
@@ -110,41 +97,6 @@ bool PipeServer::writeToPipe(const std::string& message){
     }
     FlushFileBuffers(pipeHandle);
     return true;
-}
-
-std::pair<DWORD, Commands> PipeServer::getCommandAndPidFromRequest(const std::string& Request){
-
-    std::pair<DWORD, Commands> returnValue{0, Commands::Unknown} ;
-    size_t delimiterPos = Request.find("\n");
-
-    if(delimiterPos == std::string::npos){
-        throw std::invalid_argument("Can't split string on Pid and Command !");
-    }
-
-    std::string pidStr = Request.substr(0, delimiterPos);
-    std::string commandStr = Request.substr(delimiterPos+1, std::string::npos);
-
-    std::istringstream ss(&pidStr[0]);
-    ss >> returnValue.first;
-
-    std::ostringstream pidCheckStream;
-    pidCheckStream << returnValue.first;
-
-    if(returnValue.first == 0 || pidCheckStream.str().size() != pidStr.size()){
-        throw std::invalid_argument("Can't get Pid from the string !");
-    }
-
-    if(commandStr == "SendPermission"){
-        returnValue.second = Commands::SendPermission;
-    }
-    else if(commandStr == "ReceiveLog"){
-        returnValue.second = Commands::ReceiveLog;
-    }
-    else{
-        throw std::invalid_argument("Unknown command !");
-    }
-
-    return returnValue;
 }
 
 LogInfo PipeServer::parseRequest(std::string request){

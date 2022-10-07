@@ -35,6 +35,8 @@ public:
     void startServerLoop();
 private:
     HANDLE createNewPipe(LPCWSTR PipeName);
+    bool SendPermission(const std::string& request);
+    bool ReceiveLog(const std::string& request);
     std::string readDataFromPipe();
     bool writeToPipe(const std::string& message);
     const DWORD BufferSize = 4096;
