@@ -13,7 +13,8 @@ bool PipeClient::ReceivePermission(const DWORD pid, HANDLE& pipeHandle, char& pe
 }
 
 bool PipeClient::SendLog(const LogInfo& logInfo, HANDLE& pipeHandle){
-
+    std::string request = parseLogInfoIntoRequest(logInfo);
+    return writeToPipe(request, pipeHandle);
 }
 
 std::string PipeClient::parseLogInfoIntoRequest(const LogInfo& logInfo){
