@@ -4,9 +4,9 @@
 class PipeHost
 {
 public:
-    HANDLE createNewPipe(LPCWSTR PipeName);
-    std::string readDataFromPipe(HANDLE& pipeHandle);
-    bool writeToPipe(const std::string& message, HANDLE& pipeHandle);
-    const DWORD BufferSize = 4096;
-    const DWORD TimeOut = 0;
+    static HANDLE createNewPipe(LPCWSTR PipeName);
+    static std::string readDataFromPipe(HANDLE& pipeHandle);
+    static bool writeToPipe(const std::string& message, HANDLE& pipeHandle);
+    static const DWORD BufferSize = 4096;
+    static const DWORD TimeOut = 0;
 };

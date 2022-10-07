@@ -1,10 +1,12 @@
 #pragma once
-#include "../UI/loginfo.h"
+#include "pipehost.h"
 
-class PipeClient
+class LogInfo;
+
+class PipeClient : private PipeHost
 {
 public:
-    PipeClient();
-    char ReceivePermission(const DWORD Pid);
-    bool SendLog(const LogInfo& logInfo);
+    static bool ReceivePermission(const DWORD Pid, HANDLE& pipeHandle, char& permission);
+    static bool SendLog(const LogInfo& logInfo, HANDLE& pipeHandle);
+    static std::string parseLogInfoIntoRequest(const LogInfo& logInfo);
 };

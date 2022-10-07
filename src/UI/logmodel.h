@@ -1,6 +1,6 @@
 #pragma once
 #include <QAbstractTableModel>
-#include "loginfo.h"
+#include "../Common/loginfo.h"
 
 class LogBuffer;
 

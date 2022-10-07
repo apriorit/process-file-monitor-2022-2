@@ -1,5 +1,5 @@
 #pragma once
-#include "loginfo.h"
+#include "../Common/loginfo.h"
 #include <mutex>
 
 class LogBuffer

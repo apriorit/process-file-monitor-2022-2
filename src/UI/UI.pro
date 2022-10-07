@@ -12,11 +12,11 @@ CONFIG   += cmdline precompile_header
 PRECOMPILED_HEADER = pch.h
 
 SOURCES += \
+    ../Common/loginfo.cpp \
     ../Common/pipeclient.cpp \
     ../Common/pipehost.cpp \
     ../Common/pipeserver.cpp \
     logbuffer.cpp \
-    loginfo.cpp \
     logmodel.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -27,11 +27,11 @@ SOURCES += \
     processmonitor.cpp
 
 HEADERS += \
+    ../Common/loginfo.h \
     ../Common/pipeclient.h \
     ../Common/pipehost.h \
     ../Common/pipeserver.h \
     logbuffer.h \
-    loginfo.h \
     logmodel.h \
     mainwindow.h \
     pch.h \

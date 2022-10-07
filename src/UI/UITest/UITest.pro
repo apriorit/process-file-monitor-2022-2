@@ -24,7 +24,7 @@ SOURCES += \
     ../processinfo.cpp \
     ../../Common/pipeserver.cpp \
     ../../Common/pipehost.cpp \
-    ../loginfo.cpp \
+    ../../Common/loginfo.cpp \
     ../logbuffer.cpp \
     ../processesstorage.cpp \
     tst_processesseeker.cpp \
