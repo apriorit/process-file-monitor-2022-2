@@ -13,7 +13,6 @@ SOURCES += \
     dllmain.cpp
 
 HEADERS += \
-    detours.h \
     pch.h
 
 # Default rules for deployment.
@@ -22,10 +21,11 @@ unix {
 }
 !isEmpty(target.path): INSTALLS += target
 
-win32: LIBS += -L$$PWD/../../ext/detours/ -ldetours
 
-INCLUDEPATH += $$PWD/../../ext/detours
-DEPENDPATH += $$PWD/../../ext/detours
+win32: LIBS += -L$$PWD/../../ext/mhook/ -lmhook
 
-win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../../ext/detours/detours.lib
+INCLUDEPATH += $$PWD/../../ext/mhook
+DEPENDPATH += $$PWD/../../ext/mhook
 
+win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../../ext/mhook/mhook.lib
+else:win32-g++: PRE_TARGETDEPS += $$PWD/../../ext/mhook/libmhook.a

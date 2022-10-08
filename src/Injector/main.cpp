@@ -11,7 +11,8 @@ int main(int argc, char** argv)
         std::cout << std::endl << "PID: " << PID << std::endl;
 
         //  path to dll
-        LPCSTR DllPath = "C:\\CodeBase\\Apriorit-Project\\build-src-Desktop_Qt_6_3_1_MinGW_64_bit-Debug\\Hooks\\debug\\Hooks.dll";        
+        LPCSTR DllPath = "C:\\CodeBase\\Apriorit-Project\\build-src-Desktop_Qt_6_4_0_MinGW_64_bit-Debug\\Hooks\\debug\\Hooks.dll";
+
 
         inject(PID, DllPath);
 
