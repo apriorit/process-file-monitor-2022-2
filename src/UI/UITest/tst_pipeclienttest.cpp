@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "../../Common/pipeclient.h"
-#include "../pipeserver.h"
 #include "../../Common/loginfo.h"
 
 using namespace testing;
@@ -19,8 +18,6 @@ TEST(PipeClientTest, ParseLogInfoIntoRequest){
     expect+="10?20?15?25?C:\\SomePath?SomeType?SomePreview?SomeHandle?SomeResult";
 
     auto result = PipeClient::parseLogInfoIntoRequest(logInfo);
-    //auto logResult = PipeServer::parseRequest(result);
 
     EXPECT_EQ(result, expect);
-    //EXPECT_EQ(logResult == logInfo, true);
 }

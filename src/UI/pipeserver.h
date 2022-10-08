@@ -35,7 +35,7 @@ public:
     }
 
     static std::pair<DWORD, Commands> getCommandAndPidFromRequest(const std::string& Request);
-    static LogInfo parseRequest(std::string request);
+    static LogInfo parseRequest(const std::string& request);
     void startServerLoop();
 private:
     bool sendPermission(const std::string& request);

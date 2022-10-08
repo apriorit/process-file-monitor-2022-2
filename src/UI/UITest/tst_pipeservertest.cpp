@@ -4,6 +4,12 @@
 
 using namespace testing;
 
+TEST(PipeServerTest, ParsePidCanNotBeZero){
+    std::string request = "0?10?20?30?C:\\SomePath?SomeType?SomePreview?SomeHandle?SomeResult";
+
+    EXPECT_THROW(PipeServer::parseRequest(request), std::invalid_argument);
+}
+
 TEST(PipeServerTest, ParseStandardRequest){
     std::string request = "15?10?20?30?C:\\SomePath?SomeType?SomePreview?SomeHandle?SomeResult";
     LogInfo expect(15);

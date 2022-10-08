@@ -51,7 +51,7 @@ bool PipeServer::sendPermission(const std::string& request){
     }
 }
 
-LogInfo PipeServer::parseRequest(std::string request){
+LogInfo PipeServer::parseRequest(const std::string& request){
     size_t begin = 0;
     size_t end = 0;
     LogInfo logInfo(0);
