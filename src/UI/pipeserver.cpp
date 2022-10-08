@@ -21,12 +21,12 @@ void PipeServer::startServerLoop(){
         }
         const std::string request = readDataFromPipe(pipeHandle);
         qDebug() << QString::fromStdString("Received request <" + request+">");
-        if(SendPermission(request)) continue;
-        if(ReceiveLog(request)) continue;
+        if(sendPermission(request)) continue;
+        if(receiveLog(request)) continue;
     }
 }
 
-bool PipeServer::ReceiveLog(const std::string& request){
+bool PipeServer::receiveLog(const std::string& request){
     int separatorsCount = std::count(request.begin(), request.end(), '?');
     if(PropertiesCount != separatorsCount + 1)
         return false;
@@ -37,8 +37,8 @@ bool PipeServer::ReceiveLog(const std::string& request){
     return false;
 }
 
-bool PipeServer::SendPermission(const std::string& request){
-    if(!IsStringANumber(request)) return false;
+bool PipeServer::sendPermission(const std::string& request){
+    if(!isStringANumber(request)) return false;
     const DWORD pid = std::strtoul(request.c_str(), NULL , 10);
     if(pid == 0) return false;
     std::string permission;
@@ -98,7 +98,7 @@ LogInfo PipeServer::parseRequest(std::string request){
     return logInfo;
 }
 
-bool PipeServer::IsStringANumber(const std::string& s)
+bool PipeServer::isStringANumber(const std::string& s)
 {
     return !s.empty() && s.find_first_not_of("0123456789") == std::string::npos;
 }

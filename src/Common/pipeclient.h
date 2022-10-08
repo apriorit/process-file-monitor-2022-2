@@ -14,9 +14,9 @@ private:
 class PipeClient : public PipeHost
 {
 public:
-    static bool ReceivePermission(const DWORD Pid, char& permission);
-    static bool SendLog(const LogInfo& logInfo);
+    static bool receivePermission(const DWORD Pid, char& permission);
+    static bool sendLog(const LogInfo& logInfo);
     static std::string parseLogInfoIntoRequest(const LogInfo& logInfo);
 private:
-    static HANDLE OpenPipe(LPCWSTR pineName = PipeName);
+    static HANDLE openPipe(LPCWSTR pineName = PipeName);
 };

@@ -1,8 +1,8 @@
 #include "pipeclient.h"
 #include "loginfo.h"
 
-bool PipeClient::ReceivePermission(const DWORD pid, char& permission){
-    HANDLE pipeHandle = OpenPipe(PipeName);
+bool PipeClient::receivePermission(const DWORD pid, char& permission){
+    HANDLE pipeHandle = openPipe(PipeName);
     if(pipeHandle == INVALID_HANDLE_VALUE) return false;
     HandleGuard pipeGuard(pipeHandle);
     if(writeToPipe(std::to_string(pid), pipeHandle)){
@@ -14,8 +14,8 @@ bool PipeClient::ReceivePermission(const DWORD pid, char& permission){
     return false;
 }
 
-bool PipeClient::SendLog(const LogInfo& logInfo){
-    HANDLE pipeHandle = OpenPipe(PipeName);
+bool PipeClient::sendLog(const LogInfo& logInfo){
+    HANDLE pipeHandle = openPipe(PipeName);
     if(pipeHandle == INVALID_HANDLE_VALUE) return false;
     HandleGuard pipeGuard(pipeHandle);
     std::string request = parseLogInfoIntoRequest(logInfo);
@@ -36,7 +36,7 @@ std::string PipeClient::parseLogInfoIntoRequest(const LogInfo& logInfo){
     return request;
 }
 
-HANDLE PipeClient::OpenPipe(const LPCWSTR pipeName){
+HANDLE PipeClient::openPipe(const LPCWSTR pipeName){
     return CreateFile(pipeName,
                       GENERIC_READ | GENERIC_WRITE,
                       0,

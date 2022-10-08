@@ -12,8 +12,8 @@ struct LogInfo;
 
 enum class Commands{
     Unknown,
-    SendPermission,
-    ReceiveLog
+    sendPermission,
+    receiveLog
 };
 
 class ConnectionGuard{
@@ -38,9 +38,9 @@ public:
     static LogInfo parseRequest(std::string request);
     void startServerLoop();
 private:
-    bool SendPermission(const std::string& request);
-    bool ReceiveLog(const std::string& request);
-    bool IsStringANumber(const std::string& s);
+    bool sendPermission(const std::string& request);
+    bool receiveLog(const std::string& request);
+    bool isStringANumber(const std::string& s);
     HANDLE pipeHandle;
 
     ProcessMonitor* processMonitor;
