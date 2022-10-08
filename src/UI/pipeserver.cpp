@@ -2,7 +2,6 @@
 #include "logbuffer.h"
 #include "pipeserver.h"
 #include "processmonitor.h"
-#include <regex>
 
 ConnectionGuard::~ConnectionGuard(){
     DisconnectNamedPipe(pipeHandle);
@@ -28,80 +27,78 @@ void PipeServer::startServerLoop(){
 }
 
 bool PipeServer::ReceiveLog(const std::string& request){
-    std::regex receiveLogRegex("^(<[^<>/]+>[^<>/]*</[^<>/]+>)+$");
-    if(std::regex_match(request, receiveLogRegex)){
-        auto data = readDataFromPipe(pipeHandle);
-        try{
-            logBuffer->addLogToTheBuffer(PipeServer::parseRequest(request));
-        }
-        catch(const std::invalid_argument&){}
+    int separatorsCount = std::count(request.begin(), request.end(), '?');
+    if(PropertiesCount != separatorsCount + 1)
+        return false;
+    try{
+        logBuffer->addLogToTheBuffer(PipeServer::parseRequest(request));
     }
+    catch(const std::invalid_argument&){}
     return false;
 }
 
 bool PipeServer::SendPermission(const std::string& request){
-    std::regex sendPermissionRegex("^[0-9]+$");
-    if(std::regex_match(request, sendPermissionRegex)){
-        const DWORD pid = std::strtoul(request.c_str(), NULL , 10);
-        std::string permission;
-        try{
-            permission += processMonitor->getCopyOfProcessInfoByPid(pid).getPermissionsAsChar();
-            return writeToPipe(permission, pipeHandle);
-        }
-        catch(const std::out_of_range&){}
+    if(!IsStringANumber(request)) return false;
+    const DWORD pid = std::strtoul(request.c_str(), NULL , 10);
+    if(pid == 0) return false;
+    std::string permission;
+    try{
+        permission += processMonitor->getCopyOfProcessInfoByPid(pid).getPermissionsAsChar();
+        return writeToPipe(permission, pipeHandle);
     }
-    return false;
+    catch(const std::out_of_range&){
+        return false;
+    }
 }
 
 LogInfo PipeServer::parseRequest(std::string request){
+    size_t begin = 0;
+    size_t end = 0;
     LogInfo logInfo(0);
-    std::regex propertySegmentRegEx("(<[^<>/]+>[^<>/]+</[^<>/]+>)");
-    std::smatch propertySegmentMatch;
+        for(int property = 0 ; property < PipeHost::PropertiesCount ; property++){
+            end = request.find('?',begin);
+            std::string propertyValue = request.substr(begin, end - begin);
+            switch(property){
+            case PipeHost::Pid:
+                logInfo.pid = std::strtoul(propertyValue.c_str(), NULL, 10);
+                break;
+            case PipeHost::Offset:
+                logInfo.offset = std::strtoul(propertyValue.c_str(), NULL, 10);
+                break;
+            case PipeHost::NumberOfBytes:
+                logInfo.numberOfBytes = std::strtoul(propertyValue.c_str(), NULL, 10);
+                break;
+            case PipeHost::FilePath:
+                logInfo.filePath = QString::fromStdString(propertyValue);
+                break;
+            case PipeHost::OperationType:
+                logInfo.operationType = QString::fromStdString(propertyValue);
+                break;
+            case PipeHost::Preview:
+                logInfo.preview = QString::fromStdString(propertyValue);
+                break;
+            case PipeHost::FileHande:
+                logInfo.fileHandle = QString::fromStdString(propertyValue);
+                break;
+            case PipeHost::ResultOfTheOperation:
+                logInfo.resultOfTheOperation = QString::fromStdString(propertyValue);
+                break;
+            case PipeHost::OperationTime:
+                logInfo.operationTime = std::strtoul(propertyValue.c_str(), NULL, 10);
+                break;
+            }
+            if(end == std::string::npos)break;
+            begin = end + 1;
 
-    std::regex propertyMemberRegEx("([^<>/]+)");
-    std::smatch propertyMemberMatch;
+        }
 
-    while(std::regex_search(request, propertySegmentMatch, propertySegmentRegEx)){
-        std::string propertySegment = propertySegmentMatch.str();
-        //Get name of the property
-        std::regex_search(propertySegment, propertyMemberMatch , propertyMemberRegEx);
-        std::string propertyName = propertyMemberMatch[0].str();
-        //Get value of the property
-        propertySegment = propertyMemberMatch.suffix();
-        std::regex_search(propertySegment, propertyMemberMatch , propertyMemberRegEx);
-        std::string propertyValue = propertyMemberMatch[0].str();
-        request = propertySegmentMatch.suffix();
-
-        if(propertyName == "PID"){
-            logInfo.pid = std::strtoul(propertyValue.c_str(), NULL, 10);
-        }
-        else if(propertyName == "FPATH"){
-            logInfo.filePath = QString::fromStdString(propertyValue);
-        }
-        else if(propertyName == "OTYPE"){
-            logInfo.operationType = QString::fromStdString(propertyValue);
-        }
-        else if(propertyName == "PREVIEW"){
-            logInfo.preview = QString::fromStdString(propertyValue);
-        }
-        else if(propertyName == "FHANDLE"){
-            logInfo.fileHandle = QString::fromStdString(propertyValue);
-        }
-        else if(propertyName == "RESULT"){
-            logInfo.resultOfTheOperation = QString::fromStdString(propertyValue);
-        }
-        else if(propertyName == "NOB"){
-            logInfo.numberOfBytes = std::strtoul(propertyValue.c_str(), NULL, 10);
-        }
-        else if(propertyName == "OFFSET"){
-            logInfo.offset = std::strtoul(propertyValue.c_str(), NULL, 10);
-        }
-        else if(propertyName == "OTIME"){
-            logInfo.operationTime = std::strtoul(propertyValue.c_str(), NULL, 10);
-        }
-    }
     if(logInfo.pid == 0){
         throw std::invalid_argument("Pid is not correct !");
     }
     return logInfo;
+}
+
+bool PipeServer::IsStringANumber(const std::string& s)
+{
+    return !s.empty() && s.find_first_not_of("0123456789") == std::string::npos;
 }

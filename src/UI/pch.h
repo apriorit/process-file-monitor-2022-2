@@ -21,7 +21,6 @@
 #include <algorithm>
 #include <sstream>
 #include <mutex>
-#include <regex>
 #include <cstdlib>
 
 #endif // PCH_H

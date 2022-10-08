@@ -40,6 +40,7 @@ public:
 private:
     bool SendPermission(const std::string& request);
     bool ReceiveLog(const std::string& request);
+    bool IsStringANumber(const std::string& s);
     HANDLE pipeHandle;
 
     ProcessMonitor* processMonitor;

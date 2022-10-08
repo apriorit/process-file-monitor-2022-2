@@ -11,4 +11,17 @@ protected:
     static const DWORD BufferSize = 4096;
     static const DWORD TimeOut = 0;
     static const LPCWSTR PipeName;
+
+    enum RequestProperty{
+        Pid,
+        Offset,
+        NumberOfBytes,
+        OperationTime,
+        FilePath,
+        OperationType,
+        Preview,
+        FileHande,
+        ResultOfTheOperation,
+        PropertiesCount
+    };
 };
