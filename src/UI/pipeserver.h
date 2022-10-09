@@ -31,7 +31,6 @@ class PipeServer  : public PipeHost
 public:
     PipeServer(ProcessMonitor* processMonitor, LogBuffer* logBuffer);
     ~PipeServer();
-    static std::pair<DWORD, Commands> getCommandAndPidFromRequest(const std::string& Request);
     static LogInfo parseRequest(const std::string& request);
     static void startServerThread(PipeServer* pipeServer);
     void startServerLoop();
