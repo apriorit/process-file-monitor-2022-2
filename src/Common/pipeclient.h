@@ -17,6 +17,8 @@ public:
     static bool receivePermission(const DWORD Pid, char& permission);
     static bool sendLog(const LogInfo& logInfo);
     static std::string parseLogInfoIntoRequest(const LogInfo& logInfo);
+
 private:
-    static HANDLE openPipe(LPCWSTR pineName = PipeName);
+    static HANDLE openPipe(LPCWSTR pipeName = PipeName);
+
 };
