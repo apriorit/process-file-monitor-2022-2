@@ -8,22 +8,37 @@ ConnectionGuard::~ConnectionGuard(){
 }
 
 void PipeServer::startServerLoop(){
-    int calls = 0;
+    OVERLAPPED overlappedStructure;
+    HANDLE hEvents[2];
+    overlappedStructure.hEvent = CreateEvent(NULL, FALSE , FALSE , NULL);
+    hEvents[0] = overlappedStructure.hEvent;
+    hEvents[1] = closeLoopEvent;
     while(true){
-        qDebug() << calls++;
-        DWORD connectionStatus = 0;
-        DWORD error = 0;
-        connectionStatus = ConnectNamedPipe(pipeHandle,nullptr);
-        error = GetLastError();
-        ConnectionGuard connectionGuard(pipeHandle);
-        if(connectionStatus == 0 && error != ERROR_PIPE_CONNECTED){
-            continue;
+        ConnectNamedPipe(pipeHandle, &overlappedStructure);
+        switch(WaitForMultipleObjects(2, hEvents, FALSE , INFINITE)){
+        case WAIT_OBJECT_0:
+        {
+            ConnectionGuard connectionGuard(pipeHandle);
+            DWORD error = GetLastError();
+            if(error != ERROR_IO_PENDING && error != ERROR_PIPE_CONNECTED)
+                continue;
+            const std::string request = readDataFromPipe(pipeHandle);
+            qDebug() << QString::fromStdString("Received request <" + request+">");
+            if(sendPermission(request)) continue;
+            if(receiveLog(request)) continue;
         }
-        const std::string request = readDataFromPipe(pipeHandle);
-        qDebug() << QString::fromStdString("Received request <" + request+">");
-        if(sendPermission(request)) continue;
-        if(receiveLog(request)) continue;
+        break;
+        case WAIT_OBJECT_0 + 1:
+            qDebug("Close event !");
+            return;
+        break;
+        };
     }
+
+}
+
+void PipeServer::stopServerLoop(){
+    SetEvent(closeLoopEvent);
 }
 
 bool PipeServer::receiveLog(const std::string& request){
@@ -38,8 +53,8 @@ bool PipeServer::receiveLog(const std::string& request){
 }
 
 HANDLE PipeServer::createNewPipe(LPCWSTR PipeName){
-    const DWORD PipeAccess = PIPE_ACCESS_DUPLEX;
-    const DWORD PipeMode = PIPE_READMODE_MESSAGE | PIPE_TYPE_MESSAGE | PIPE_WAIT;
+    const DWORD PipeAccess = PIPE_ACCESS_DUPLEX | FILE_FLAG_OVERLAPPED;
+    const DWORD PipeMode = PIPE_READMODE_MESSAGE | PIPE_TYPE_MESSAGE;
     const DWORD Instances = 1;
     HANDLE pipeHandle = CreateNamedPipe(
                 PipeName,
