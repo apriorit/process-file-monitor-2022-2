@@ -7,6 +7,22 @@ ConnectionGuard::~ConnectionGuard(){
     DisconnectNamedPipe(pipeHandle);
 }
 
+PipeServer::PipeServer(ProcessMonitor* processMonitor, LogBuffer* logBuffer)
+    :pipeHandle{createNewPipe(PipeName)},
+    closeLoopEvent{CreateEvent(NULL, FALSE , FALSE , NULL)},
+    serverThread{std::thread(startServerThread,this)},
+    processMonitor{processMonitor},
+    logBuffer{logBuffer}{};
+
+PipeServer::~PipeServer(){
+    SetEvent(closeLoopEvent);
+    serverThread.join();
+}
+
+void PipeServer::startServerThread(PipeServer* pipeServer){
+    pipeServer->startServerLoop();
+}
+
 void PipeServer::startServerLoop(){
     OVERLAPPED overlappedStructure;
     HANDLE hEvents[2];
@@ -34,7 +50,6 @@ void PipeServer::startServerLoop(){
         break;
         };
     }
-
 }
 
 void PipeServer::stopServerLoop(){

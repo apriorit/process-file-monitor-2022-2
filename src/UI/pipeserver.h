@@ -3,6 +3,7 @@
 #include "../Common/pipehost.h"
 #include <windows.h>
 #include <QDebug>
+#include <thread>
 
 class ProcessMonitor;
 
@@ -28,13 +29,11 @@ private:
 class PipeServer  : public PipeHost
 {
 public:
-    PipeServer(ProcessMonitor* processMonitor, LogBuffer* logBuffer)
-        :pipeHandle{createNewPipe(PipeName)},
-          closeLoopEvent{CreateEvent(NULL, FALSE , FALSE , NULL)},
-          processMonitor{processMonitor},
-          logBuffer{logBuffer}{}
+    PipeServer(ProcessMonitor* processMonitor, LogBuffer* logBuffer);
+    ~PipeServer();
     static std::pair<DWORD, Commands> getCommandAndPidFromRequest(const std::string& Request);
     static LogInfo parseRequest(const std::string& request);
+    static void startServerThread(PipeServer* pipeServer);
     void startServerLoop();
     void stopServerLoop();
 private:
@@ -44,6 +43,7 @@ private:
     bool isStringANumber(const std::string& s);
     HANDLE pipeHandle;
     HANDLE closeLoopEvent;
+    std::thread serverThread;
 
     ProcessMonitor* processMonitor;
     LogBuffer* logBuffer;
