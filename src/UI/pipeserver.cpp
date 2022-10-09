@@ -37,6 +37,22 @@ bool PipeServer::receiveLog(const std::string& request){
     return false;
 }
 
+HANDLE PipeServer::createNewPipe(LPCWSTR PipeName){
+    const DWORD PipeAccess = PIPE_ACCESS_DUPLEX;
+    const DWORD PipeMode = PIPE_READMODE_MESSAGE | PIPE_TYPE_MESSAGE | PIPE_WAIT;
+    const DWORD Instances = 1;
+    HANDLE pipeHandle = CreateNamedPipe(
+                PipeName,
+                PipeAccess,
+                PipeMode,
+                Instances,
+                BufferSize,
+                BufferSize,
+                TimeOut,
+                NULL);
+    return pipeHandle;
+}
+
 bool PipeServer::sendPermission(const std::string& request){
     if(!isStringANumber(request)) return false;
     const DWORD pid = std::strtoul(request.c_str(), NULL , 10);

@@ -31,6 +31,7 @@ public:
     PipeServer(ProcessMonitor* processMonitor, LogBuffer* logBuffer)
         :processMonitor{processMonitor},
         logBuffer{logBuffer}{
+
         pipeHandle = createNewPipe(PipeName);
     }
 
@@ -38,6 +39,7 @@ public:
     static LogInfo parseRequest(const std::string& request);
     void startServerLoop();
 private:
+    HANDLE createNewPipe(LPCWSTR PipeName);
     bool sendPermission(const std::string& request);
     bool receiveLog(const std::string& request);
     bool isStringANumber(const std::string& s);
