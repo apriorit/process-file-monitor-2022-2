@@ -2,7 +2,6 @@
 #include "processmonitor.h"
 #include "processesseeker.h"
 #include "processesstorage.h"
-#include <mutex>
 
 ProcessMonitor::ProcessMonitor(IProcessesSeeker* processesSeeker)
                :processesStorage{std::make_unique<ProcessesStorage>()},

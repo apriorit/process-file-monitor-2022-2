@@ -22,5 +22,6 @@
 #include <sstream>
 #include <mutex>
 #include <cstdlib>
+#include <thread>
 
 #endif // PCH_H

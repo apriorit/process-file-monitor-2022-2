@@ -36,6 +36,7 @@ public:
     static void startServerThread(PipeServer* pipeServer);
     void startServerLoop();
     void stopServerLoop();
+
 private:
     HANDLE createNewPipe(LPCWSTR PipeName);
     bool sendPermission(const std::string& request);
@@ -44,7 +45,7 @@ private:
     HANDLE pipeHandle;
     HANDLE closeLoopEvent;
     std::thread serverThread;
-
     ProcessMonitor* processMonitor;
     LogBuffer* logBuffer;
+
 };

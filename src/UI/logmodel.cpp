@@ -1,5 +1,5 @@
-#include "logbuffer.h"
 #include "pch.h"
+#include "logbuffer.h"
 #include "logmodel.h"
 
 LogModel::LogModel(QObject *parent, LogBuffer* logBuffer)

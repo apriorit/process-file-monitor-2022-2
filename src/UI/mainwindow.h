@@ -1,8 +1,8 @@
 #pragma once
-
 #include "ui_mainwindow.h"
 #include "processesmodel.h"
 #include "logmodel.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE

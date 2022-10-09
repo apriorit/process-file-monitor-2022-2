@@ -6,7 +6,6 @@
 #include "processesseeker.h"
 #include "pipeserver.h"
 #include "logbuffer.h"
-#include <thread>
 
 int main(int argc, char *argv[])
 {
