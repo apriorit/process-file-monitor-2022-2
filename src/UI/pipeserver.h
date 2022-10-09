@@ -32,9 +32,7 @@ public:
     PipeServer(ProcessMonitor* processMonitor, LogBuffer* logBuffer);
     ~PipeServer();
     static LogInfo parseRequest(const std::string& request);
-    static void startServerThread(PipeServer* pipeServer);
     void startServerLoop();
-    void stopServerLoop();
 
 private:
     HANDLE createNewPipe(LPCWSTR PipeName);

@@ -2,7 +2,7 @@
 #include "logbuffer.h"
 #include "pipeserver.h"
 #include "processmonitor.h"
-
+#include <functional>
 ConnectionGuard::~ConnectionGuard(){
     DisconnectNamedPipe(pipeHandle);
 }
@@ -10,17 +10,13 @@ ConnectionGuard::~ConnectionGuard(){
 PipeServer::PipeServer(ProcessMonitor* processMonitor, LogBuffer* logBuffer)
     :pipeHandle{createNewPipe(PipeName)},
     closeLoopEvent{CreateEvent(NULL, FALSE , FALSE , NULL)},
-    serverThread{std::thread(startServerThread,this)},
+    serverThread{std::thread([this]{this->startServerLoop();})},
     processMonitor{processMonitor},
     logBuffer{logBuffer}{};
 
 PipeServer::~PipeServer(){
     SetEvent(closeLoopEvent);
     serverThread.join();
-}
-
-void PipeServer::startServerThread(PipeServer* pipeServer){
-    pipeServer->startServerLoop();
 }
 
 void PipeServer::startServerLoop(){
@@ -50,10 +46,6 @@ void PipeServer::startServerLoop(){
         break;
         };
     }
-}
-
-void PipeServer::stopServerLoop(){
-    SetEvent(closeLoopEvent);
 }
 
 bool PipeServer::receiveLog(const std::string& request){
