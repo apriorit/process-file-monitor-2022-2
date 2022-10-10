@@ -19,5 +19,9 @@
 #include <map>
 #include <string>
 #include <algorithm>
+#include <sstream>
+#include <mutex>
+#include <cstdlib>
+#include <thread>
 
 #endif // PCH_H

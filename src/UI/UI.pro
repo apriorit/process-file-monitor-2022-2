@@ -12,9 +12,14 @@ CONFIG   += cmdline precompile_header
 PRECOMPILED_HEADER = pch.h
 
 SOURCES += \
+    ../Common/loginfo.cpp \
+    ../Common/pipeclient.cpp \
+    ../Common/pipehost.cpp \
+    logbuffer.cpp \
     logmodel.cpp \
     main.cpp \
     mainwindow.cpp \
+    pipeserver.cpp \
     processesmodel.cpp \
     processesseeker.cpp \
     processesstorage.cpp \
@@ -22,9 +27,14 @@ SOURCES += \
     processmonitor.cpp
 
 HEADERS += \
+    ../Common/loginfo.h \
+    ../Common/pipeclient.h \
+    ../Common/pipehost.h \
+    logbuffer.h \
     logmodel.h \
     mainwindow.h \
     pch.h \
+    pipeserver.h \
     processesmodel.h \
     processesseeker.h \
     processesstorage.h \

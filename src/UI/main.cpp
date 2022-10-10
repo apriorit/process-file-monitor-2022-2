@@ -4,18 +4,25 @@
 #include "logmodel.h"
 #include "processmonitor.h"
 #include "processesseeker.h"
+#include "pipeserver.h"
+#include "logbuffer.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    LogModel logModel;
+    LogBuffer logBuffer;
+    LogModel logModel(nullptr, &logBuffer);
 
     ProcessesSeeker processSeeker;
     ProcessMonitor processMonitor(&processSeeker);
     ProcessesModel processesModel(nullptr,&processMonitor);
 
+    PipeServer pipeServer(&processMonitor, &logBuffer);
+
     MainWindow window(nullptr, &processesModel, &logModel);
     window.show();
-    return a.exec();
+    a.exec();
+
+    return 0;
 }

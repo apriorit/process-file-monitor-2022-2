@@ -3,6 +3,26 @@
 
 using namespace testing;
 
+TEST(ProcessInfoTest, PermissionToCharChangedSettings){
+    ProcessInfo process(10, "proc1");
+    process.readPermission = false;
+    process.writePermission = false;
+    process.isMonitored = true;
+
+    char result = process.getPermissionsAsChar();
+
+    EXPECT_EQ(result, 28);
+}
+
+
+TEST(ProcessInfoTest, PermissionToCharDefault){
+    ProcessInfo process(10, "proc1");
+
+    char result = process.getPermissionsAsChar();
+
+    EXPECT_EQ(result, 15);
+}
+
 TEST(ProcessInfoTest, ProcessInfoCheckGreater)
 {
     ProcessInfo process1(10,"proc1");

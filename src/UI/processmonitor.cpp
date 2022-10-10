@@ -8,15 +8,18 @@ ProcessMonitor::ProcessMonitor(IProcessesSeeker* processesSeeker)
                processesSeeker{processesSeeker}{};
 
 void ProcessMonitor::updateProcessesTable() {
+    std::lock_guard<std::mutex> guard(processesStorageMutex);
     auto update = processesSeeker->getSystemProcesses();
     processesStorage->update(update);
 }
 
-ProcessInfo ProcessMonitor::getCopyOfProcessInfoByIndex(const size_t Index) const{
+ProcessInfo ProcessMonitor::getCopyOfProcessInfoByIndex(const size_t Index) const {
+    std::lock_guard<std::mutex> guard(processesStorageMutex);
     return processesStorage->getProcessByIndex(Index);
 }
 
-ProcessInfo ProcessMonitor::getCopyOfProcessInfoByPid(const DWORD Pid) const{
+ProcessInfo ProcessMonitor::getCopyOfProcessInfoByPid(const DWORD Pid) const {
+    std::lock_guard<std::mutex> guard(processesStorageMutex);
     return processesStorage->getProcessByPid(Pid);
 }
 
@@ -45,16 +48,19 @@ void ProcessMonitor::setProcessEditableField(ProcessInfo& process, const Process
 }
 
 void ProcessMonitor::setProcessEditableFieldByIndex(const size_t Index, const ProcessEditableFields field, const bool value){
+    std::lock_guard<std::mutex> guard(processesStorageMutex);
     auto& process = processesStorage->getProcessByIndex(Index);
     setProcessEditableField(process, field , value);
 }
 
 void ProcessMonitor::setProcessEditableFieldByPid(const DWORD Pid, const ProcessEditableFields field, const bool value){
+    std::lock_guard<std::mutex> guard(processesStorageMutex);
     auto& process = processesStorage->getProcessByPid(Pid);
     setProcessEditableField(process, field , value);
 }
 
-size_t ProcessMonitor::getProcessesCount() const{
+size_t ProcessMonitor::getProcessesCount(){
+    std::lock_guard<std::mutex> guard(processesStorageMutex);
     return processesStorage->getSize();
 }
 

@@ -8,7 +8,7 @@ ProcessesModel::ProcessesModel(QObject *parent, IProcessMonitor* processMonitor)
       timer{new QTimer(this)}
 {
     updateProcessesList();
-    const int updateIntervalInMs = 1000;
+    const int updateIntervalInMs = 100;
     timer->setInterval(updateIntervalInMs);
     connect(timer, &QTimer::timeout , this, &ProcessesModel::updateProcessesList);
     timer->start();

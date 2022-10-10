@@ -1,29 +1,19 @@
 #pragma once
-
 #include <QAbstractTableModel>
+#include "../Common/loginfo.h"
 
-struct LogInfo{
-    QString filePath;
-    QString operationType;
-    DWORD pid;
-    DWORD numberOfBytes;
-    DWORD offset;
-    QString preview;
-    QString fileHandle;
-    QString operationTime;
-    QString resultOfTheOperation;
-};
+class LogBuffer;
 
 enum class LogTableColumn{
-    FileHandle,
+    OperationTime,
+    Pid,
     FilePath,
     OperationType,
-    Pid,
+    ResultOfTheOperation,
+    FileHandle,
     NumberOfBytes,
     Offset,
     Preview,
-    OperationTime,
-    ResultOfTheOperation,
     ColumnCount
 };
 
@@ -32,12 +22,15 @@ class LogModel : public QAbstractTableModel
     Q_OBJECT
 
 public:
-    explicit LogModel(QObject *parent = nullptr);
+    explicit LogModel(QObject *parent, LogBuffer* logBuffer);
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    void getDataFromBuffer();
     void clearLogs();
 private:
     std::vector<LogInfo> logs;
+    LogBuffer* logBuffer;
+    QTimer* timer;
 };

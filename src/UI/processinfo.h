@@ -24,6 +24,7 @@ struct ProcessInfo{
     bool isDllInjected = false;
 
     bool settingsEquals(const ProcessInfo& other) const;
+    char getPermissionsAsChar();
     friend bool operator<(const ProcessInfo& first , const ProcessInfo& second);
     friend bool operator==(const ProcessInfo& first , const ProcessInfo& second);
 };

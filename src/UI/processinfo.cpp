@@ -15,6 +15,17 @@ bool ProcessInfo::settingsEquals(const ProcessInfo& other) const{
             && isDllInjected == other.isDllInjected;
 }
 
+char ProcessInfo::getPermissionsAsChar(){
+    char permission = 0;
+    if(readPermission) permission+=1;
+    if(writePermission) permission+=2;
+    if(openPermission) permission+=4;
+    if(deletePermission) permission+=8;
+    if(isMonitored) permission+=16;
+
+    return permission;
+}
+
 bool operator<(const ProcessInfo& first , const ProcessInfo& second){
     return first.Pid < second.Pid;
 }

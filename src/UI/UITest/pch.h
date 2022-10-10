@@ -6,5 +6,6 @@
 #include <windows.h>
 #include <memory>
 #include <initializer_list>
+#include <QDebug>
 
 #endif // PCH_H
