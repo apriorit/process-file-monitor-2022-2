@@ -1,13 +1,18 @@
 #include "inject.cpp"
 
-int main()
+int main(int argc, char** argv)
 {
     try
     {
-        //  path to dll
-        LPCSTR DllPath = "C:\\CodeBase\\Apriorit-Project\\build-src-Desktop_Qt_6_3_1_MinGW_64_bit-Debug\\Hooks\\debug\\Hooks.dll";
+        if (argc < 2) throw std::runtime_error("PID of the target function must be passed to the injector");
+
         // target process PID
-        DWORD PID = 26260;
+        DWORD PID = (DWORD)(atol(argv[1]));
+        std::cout << std::endl << "PID: " << PID << std::endl;
+
+        //  path to dll
+        LPCSTR DllPath = "C:\\CodeBase\\Apriorit-Project\\build-src-Desktop_Qt_6_4_0_MinGW_64_bit-Debug\\Hooks\\debug\\Hooks.dll";
+
 
         inject(PID, DllPath);
 

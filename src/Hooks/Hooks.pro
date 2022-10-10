@@ -20,3 +20,12 @@ unix {
     target.path = /usr/lib
 }
 !isEmpty(target.path): INSTALLS += target
+
+
+win32: LIBS += -L$$PWD/../../ext/mhook/ -lmhook
+
+INCLUDEPATH += $$PWD/../../ext/mhook
+DEPENDPATH += $$PWD/../../ext/mhook
+
+win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../../ext/mhook/mhook.lib
+else:win32-g++: PRE_TARGETDEPS += $$PWD/../../ext/mhook/libmhook.a
